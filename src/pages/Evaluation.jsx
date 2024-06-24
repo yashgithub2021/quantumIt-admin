@@ -100,8 +100,20 @@ const Evaluation = () => {
 
     const handleSubmit = async () => {
         const form = new FormData();
-        for (let key in formData) {
-            form.append(key, formData[key]);
+        // for (let key in formData) {
+        //     form.append(key, formData[key]);
+        // }
+
+        for (const key in formData) {
+            if (formData.hasOwnProperty(key)) {
+                if (Array.isArray(formData[key])) {
+                    formData[key].forEach((item, index) => {
+                        form.append(`${key}[${index}]`, item);
+                    });
+                } else {
+                    form.append(key, formData[key]);
+                }
+            }
         }
 
         if (editMode && editId) {
@@ -111,6 +123,7 @@ const Evaluation = () => {
                 handleClose();
             }
         } else {
+            // console.log(form.entries())
             await SetEvaluationForm(dispatch, form);
             if (!isFetching && !error) {
                 toast.success("Blog Added Successfully", toastOptions);
@@ -168,7 +181,7 @@ const Evaluation = () => {
                     </Button>
                 </div>
             </div>
-            <div className='mb-3 p-2 row w-100 flex justify-content-start align-items-center' style={{ marginLeft: '10px' }}>
+            <div className='mb-3 overflow-x-scroll p-2 row w-100 flex justify-content-start align-items-center' style={{ marginLeft: '10px' }}>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -270,47 +283,78 @@ const Evaluation = () => {
                         </Form.Group>
                         <Form.Group controlId="formKeyPoints">
                             <Form.Label>Key Points</Form.Label>
+                            <ol>
+                                {formData?.keyPoints?.map((p, i) => (
+                                    <li key={i}>
+                                        {p}
+                                        <i className='fa fa-times'
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => {
+                                                const updatedKeyPoints = formData.keyPoints.filter((_, index) => index !== i);
+                                                setFormData({ ...formData, keyPoints: updatedKeyPoints });
+                                                console.log(updatedKeyPoints)
+                                            }}
+                                            style={{ marginLeft: '10px', cursor: 'pointer', color: 'red' }}
+                                        >
+                                            X
+                                        </i>
+                                    </li>
+                                ))}
+                            </ol>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                    type="text"
-                                    placeholder="Enter a key point"
-                                    value={keypoint}
+                                    placeholder="Key point"
+                                    aria-label="Key point"
                                     onChange={(e) => setKeypoint(e.target.value)}
+                                    value={keypoint}
+                                    autoFocus
                                 />
-                                <Button variant="outline-secondary" onClick={() => {
-                                    setFormData({ ...formData, keyPoints: [...formData.keyPoints, keypoint] });
-                                    setKeypoint('');
-                                }}>
+                                <Button
+                                    onClick={() => {
+                                        setFormData({ ...formData, keyPoints: [...formData.keyPoints, keypoint] });
+                                        setKeypoint('');
+                                        console.log(formData.keyPoints)
+                                    }}
+                                    variant="outline-secondary"
+                                    id="button-addon2"
+                                >
                                     Add
                                 </Button>
                             </InputGroup>
-                            <ul>
-                                {formData.keyPoints.map((point, index) => (
-                                    <li key={index}>{point}</li>
-                                ))}
-                            </ul>
                         </Form.Group>
                         <Form.Group controlId="formKeyInsights">
                             <Form.Label>Key Insights</Form.Label>
+                            <ol>
+                                {formData?.keyInsights?.map((p, i) => (
+                                    <li key={i}>
+                                        {p}
+                                        <i className='fa fa-times'
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => {
+                                                const updatedKeyInsigts = formData.keyInsights.filter((_, index) => index !== i);
+                                                setFormData({ ...formData, keyInsights: updatedKeyInsigts });
+                                            }}
+                                            style={{ marginLeft: '10px', cursor: 'pointer', color: 'red' }}
+                                        >
+                                            X
+                                        </i>
+                                    </li>
+                                ))}
+                            </ol>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                    type="text"
-                                    placeholder="Enter a key insight"
-                                    value={keyinsight}
+                                    placeholder="Key Insights"
+                                    aria-label="Key Insight"
                                     onChange={(e) => setKeyinsight(e.target.value)}
+                                    value={keyinsight}
+                                    autoFocus
                                 />
-                                <Button variant="outline-secondary" onClick={() => {
-                                    setFormData({ ...formData, keyInsights: [...formData.keyInsights, keyinsight] });
-                                    setKeyinsight('');
-                                }}>
+                                <Button onClick={() => { setFormData({ ...formData, keyInsights: [...formData.keyInsights, keyinsight] }); setKeyinsight(''); }} variant="outline-secondary" id="button-addon2">
                                     Add
                                 </Button>
                             </InputGroup>
-                            <ul>
-                                {formData.keyInsights.map((insight, index) => (
-                                    <li key={index}>{insight}</li>
-                                ))}
-                            </ul>
                         </Form.Group>
                         <Form.Group controlId="formReadTime">
                             <Form.Label>Read Time</Form.Label>

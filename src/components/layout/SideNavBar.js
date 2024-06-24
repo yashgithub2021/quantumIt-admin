@@ -27,11 +27,11 @@ const linkList = [
     text: "Blogs",
     url: "/admin/eval-form"
   },
-  {
-    icon: <MdFormatListBulletedAdd className="icon-md" />,
-    text: "Contributors",
-    url: "/admin/add-contributor"
-  },
+  // {
+  //   icon: <MdFormatListBulletedAdd className="icon-md" />,
+  //   text: "Contributors",
+  //   url: "/admin/add-contributor"
+  // },
   {
     icon: <MdOutlineSwipeRight className="icon-md" />,
     text: "Contact us",

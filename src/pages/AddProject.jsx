@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputGroup, Card, Button, Modal, Table, Form } from 'react-bootstrap';
+import { InputGroup, Card, Button, Modal, Table, Form, Tabs, Tab } from 'react-bootstrap';
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/error";
 import { GetAllClinics, CreateProject, RemoveProject, EditProject } from '../Redux/ApiCalls';
@@ -23,6 +23,7 @@ const Clinic = () => {
     const [firstFile, setFirstFile] = useState(null);
     const [secondFile, setSecondFile] = useState(null);
     const [thirdFile, setThirdFile] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
     const handleFirstFileChange = (event) => {
         setFirstFile(event.target.files[0]);
@@ -37,6 +38,7 @@ const Clinic = () => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
+        description2: '',
         clientName: '',
         date: '',
         image: '',
@@ -52,6 +54,7 @@ const Clinic = () => {
         setFormData({
             name: '',
             description: '',
+            description2: '',
             clientName: '',
             date: '',
             image: '',
@@ -151,78 +154,221 @@ const Clinic = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isFetching]);
 
+    const filteredClinics = selectedCategory === 'All' ? clinics : clinics.filter(clinic => clinic.category.includes(selectedCategory));
     return (
         <div className='container-fluid'>
-            <Card style={{ overflowX: 'scroll' }}>
+            <Card>
                 <Card.Header>
                     <Button variant="primary" onClick={handleShow}>
                         Add Project
                     </Button>
                 </Card.Header>
                 <Card.Body>
-                    <Table striped bordered hover >
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Categorie's</th>
-                                <th>Client Name</th>
-                                <th>Image 1</th>
-                                <th>Image 2</th>
-                                <th>Portfolio Image</th>
-                                <th colSpan={2}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {isFetching ? "Loading..." :
-                                clinics?.map((clinic, i) =>
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{clinic.name}</td>
-                                        <td>
-                                            <ul>
-                                                {clinic.category.map((category, i) => (
-                                                    <li key={i}>
-                                                        {category}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            {clinic.clientName}
-                                        </td>
-                                        <td>
-                                            <img alt='product' loading='lazy' width={130} height={100} src={clinic.image} />
-                                        </td>
-                                        <td>
-                                            <img alt='product' loading='lazy' width={130} height={100} src={clinic.imageTwo} />
-                                        </td>
-                                        <td>
-                                            <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
-                                        </td>
-                                        <td onClick={() => {
-                                            handleShow(); setIsEdit(true); setFormData({
-                                                name: clinic.name,
-                                                description: clinic.description,
-                                                clientName: clinic.clientName,
-                                                date: clinic.date,
-                                                image: clinic.image,
-                                                imageTwo: clinic.imageTwo,
-                                                liveLink: clinic.liveLink,
-                                                category: clinic.category,
-                                                keyPoints: clinic.keyPoints,
-                                                keyInsights: clinic.keyInsights,
-                                                aboutProject: clinic.aboutProject,
-                                            }); setUpdateToId(clinic._id);
-                                        }} className='text-primary'>
-                                            <CiEdit style={{ color: 'green', fontSize: '30px' }} />
-                                        </td>
-                                        <td onClick={() => { handleDelete(clinic._id) }}>
-                                            <MdDelete style={{ color: 'red', fontSize: '30px' }} />
-                                        </td>
-                                    </tr>)}
-                        </tbody>
-                    </Table>
+                    <Tabs
+                        id="controlled-tab-example"
+                        activeKey={selectedCategory}
+                        onSelect={(k) => setSelectedCategory(k)}
+                        className="mb-3"
+                    >
+                        <Tab eventKey="All" title="All">
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Categories</th>
+                                        <th>Client Name</th>
+                                        <th>Image 1</th>
+                                        <th>Image 2</th>
+                                        <th>Portfolio Image</th>
+                                        <th colSpan={2}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {isFetching ? "Loading..." :
+                                        filteredClinics?.map((clinic, i) =>
+                                            <tr key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>{clinic.name}</td>
+                                                <td>
+                                                    <ul>
+                                                        {clinic.category.map((category, i) => (
+                                                            <li key={i}>
+                                                                {category}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    {clinic.clientName}
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic.image} />
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic.imageTwo} />
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
+                                                </td>
+                                                <td onClick={() => {
+                                                    handleShow(); setIsEdit(true); setFormData({
+                                                        name: clinic.name,
+                                                        description: clinic.description,
+                                                        description2: clinic.description2,
+                                                        clientName: clinic.clientName,
+                                                        date: clinic.date,
+                                                        image: clinic.image,
+                                                        imageTwo: clinic.imageTwo,
+                                                        liveLink: clinic.liveLink,
+                                                        category: clinic.category,
+                                                        keyPoints: clinic.keyPoints,
+                                                        keyInsights: clinic.keyInsights,
+                                                        aboutProject: clinic.aboutProject,
+                                                    }); setUpdateToId(clinic._id);
+                                                }} className='text-primary'>
+                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                </td>
+                                                <td onClick={() => { handleDelete(clinic._id) }}>
+                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                </td>
+                                            </tr>)}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="Web App" title="Web App">
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Categories</th>
+                                        <th>Client Name</th>
+                                        <th>Image 1</th>
+                                        <th>Image 2</th>
+                                        <th>Portfolio Image</th>
+                                        <th colSpan={2}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {isFetching ? "Loading..." :
+                                        filteredClinics?.map((clinic, i) =>
+                                            <tr key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>{clinic.name}</td>
+                                                <td>
+                                                    <ul>
+                                                        {clinic.category.map((category, i) => (
+                                                            <li key={i}>
+                                                                {category}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    {clinic.clientName}
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic.image} />
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic.imageTwo} />
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
+                                                </td>
+                                                <td onClick={() => {
+                                                    handleShow(); setIsEdit(true); setFormData({
+                                                        name: clinic.name,
+                                                        description: clinic.description,
+                                                        description2: clinic.description2,
+                                                        clientName: clinic.clientName,
+                                                        date: clinic.date,
+                                                        image: clinic.image,
+                                                        imageTwo: clinic.imageTwo,
+                                                        liveLink: clinic.liveLink,
+                                                        category: clinic.category,
+                                                        keyPoints: clinic.keyPoints,
+                                                        keyInsights: clinic.keyInsights,
+                                                        aboutProject: clinic.aboutProject,
+                                                    }); setUpdateToId(clinic._id);
+                                                }} className='text-primary'>
+                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                </td>
+                                                <td onClick={() => { handleDelete(clinic._id) }}>
+                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                </td>
+                                            </tr>)}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                        <Tab eventKey="Mobile App" title="Mobile App">
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Categories</th>
+                                        <th>Client Name</th>
+                                        <th>Image 1</th>
+                                        <th>Image 2</th>
+                                        <th>Portfolio Image</th>
+                                        <th colSpan={2}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {isFetching ? "Loading..." :
+                                        filteredClinics?.map((clinic, i) =>
+                                            <tr key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>{clinic.name}</td>
+                                                <td>
+                                                    <ul>
+                                                        {clinic.category.map((category, i) => (
+                                                            <li key={i}>
+                                                                {category}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    {clinic.clientName}
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic.image} />
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic.imageTwo} />
+                                                </td>
+                                                <td>
+                                                    <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
+                                                </td>
+                                                <td onClick={() => {
+                                                    handleShow(); setIsEdit(true); setFormData({
+                                                        name: clinic.name,
+                                                        description: clinic.description,
+                                                        description2: clinic.description2,
+                                                        clientName: clinic.clientName,
+                                                        date: clinic.date,
+                                                        image: clinic.image,
+                                                        imageTwo: clinic.imageTwo,
+                                                        liveLink: clinic.liveLink,
+                                                        category: clinic.category,
+                                                        keyPoints: clinic.keyPoints,
+                                                        keyInsights: clinic.keyInsights,
+                                                        aboutProject: clinic.aboutProject,
+                                                    }); setUpdateToId(clinic._id);
+                                                }} className='text-primary'>
+                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                </td>
+                                                <td onClick={() => { handleDelete(clinic._id) }}>
+                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                </td>
+                                            </tr>)}
+                                </tbody>
+                            </Table>
+                        </Tab>
+                    </Tabs>
                 </Card.Body>
             </Card>
             <Modal show={show} onHide={handleClose} size="lg"
@@ -248,6 +394,15 @@ const Clinic = () => {
                                 type="text"
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 value={formData.description}
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="doctor.ControlInput2">
+                            <Form.Label>Description 2</Form.Label>
+                            <Form.Control
+                                type="text"
+                                onChange={(e) => setFormData({ ...formData, description2: e.target.value })}
+                                value={formData.description2}
                                 autoFocus
                             />
                         </Form.Group>
@@ -288,6 +443,7 @@ const Clinic = () => {
                                 onChange={(e) => setFormData({ ...formData, category: Array.from(e.target.selectedOptions, option => option.value) })}>
                                 <option value="Web App">Web App</option>
                                 <option value="Mobile App">Mobile App</option>
+                                <option value="Digital Marketing">Digital Marketing</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="doctor.ControlInput2">
