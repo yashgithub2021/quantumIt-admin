@@ -48,6 +48,7 @@ const Evaluation = () => {
         twitter: '',
         instagram: '',
         blogImage: null,
+        blogImage2: null,
         authorProfile: null,
     });
 
@@ -68,6 +69,7 @@ const Evaluation = () => {
             twitter: '',
             instagram: '',
             blogImage: null,
+            blogImage2: null,
             authorProfile: null,
         });
     };
@@ -190,6 +192,8 @@ const Evaluation = () => {
                             <th>Category</th>
                             <th>Read Time</th>
                             <th>Author</th>
+                            <th>Image1</th>
+                            <th>Image2</th>
                             <th colSpan={2}>Actions</th>
                         </tr>
                     </thead>
@@ -214,6 +218,12 @@ const Evaluation = () => {
                                     </td>
                                     <td>{blog.readTime}</td>
                                     <td>{blog.author.authorName}</td>
+                                    <td>
+                                        <img alt='img1' loading='lazy' width={130} height={100} src={blog.image} />
+                                    </td>
+                                    <td>
+                                        <img alt='img2' loading='lazy' width={130} height={100} src={blog.image2} />
+                                    </td>
                                     <td>
                                         <CiEdit onClick={() => handleEdit(blog)} style={{ cursor: 'pointer', color: 'green', fontSize: '30px' }} />
                                     </td>
@@ -421,10 +431,17 @@ const Evaluation = () => {
                             />
                         </Form.Group>
                         <Form.Group controlId="formBlogImage">
-                            <Form.Label>Blog Image</Form.Label>
+                            <Form.Label>Blog Image1</Form.Label>
                             <Form.Control
                                 type="file"
                                 onChange={(e) => setFormData({ ...formData, blogImage: e.target.files[0] })}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formBlogImage">
+                            <Form.Label>Blog Image2</Form.Label>
+                            <Form.Control
+                                type="file"
+                                onChange={(e) => setFormData({ ...formData, blogImage2: e.target.files[0] })}
                             />
                         </Form.Group>
                         <Form.Group controlId="formAuthorProfile">
