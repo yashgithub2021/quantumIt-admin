@@ -1,15 +1,22 @@
+import CountUp from "react-countup";
+
 function CardQueries(props) {
     return (
         <div className='col-lg-3 col-sm-6'>
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{props.total}</h3>
+                    <h3>
+                        <CountUp end={props.total}
+                            useGrouping={false}
+                            duration={"2"} />
+                    </h3>
                     <p>Total Feedbacks</p>
                 </div>
                 <div class="icon">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 2H4C2.89 2 2 2.89 2 4v16l4-4h14c1.11 0 2-.89 2-2V4c0-1.11-.89-2-2-2zM18 12h-2v-2h2v2zm0-4h-2V6h2v2zm-4 4H6v-2h8v2zm0-4H6V6h8v2z"></path>
                     </svg>
+
                 </div>
             </div>
         </div>

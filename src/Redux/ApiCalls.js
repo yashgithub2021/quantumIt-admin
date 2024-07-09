@@ -418,13 +418,13 @@ export const GetProfile = async (dispatch) => {
     }
 }
 
-export const updateProfile = (profileData) => async (dispatch, getState) => {
-    const { token } = getState().auth;
+export const updateProfile = async (dispatch, profileData) => {
+    // const { token } = getState().auth;
     dispatch(UpdateStart());
     try {
         const { data } = await axiosInstance.put("/api/users/profile/update", profileData, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `${token}`,
             },
         });
         dispatch(UpdateSuccess({ user: data.user }));

@@ -9,7 +9,12 @@ import { toast } from "react-toastify";
 import { toastOptions } from "../utils/error";
 import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
+import { FaEye } from "react-icons/fa";
+
 import { generateRandomSixDigitNumber } from '../utils/function';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import the styles
+
 
 const Evaluation = () => {
     const { isFetching, error, errMsg, evaluationform } = useSelector(state => state.eval);
@@ -34,7 +39,7 @@ const Evaluation = () => {
     const handleShow = () => setShow(true);
     const [formData, setFormData] = useState({
         title: '',
-        category: '',
+        category: [],
         description: '',
         detailedInsights: '',
         quote: '',
@@ -55,7 +60,7 @@ const Evaluation = () => {
     const resetForm = () => {
         setFormData({
             title: '',
-            category: '',
+            category: [],
             description: '',
             detailedInsights: '',
             quote: '',
@@ -74,28 +79,32 @@ const Evaluation = () => {
         });
     };
 
+    const handleDescriptionChange = (value) => {
+        setFormData({ ...formData, description: value });
+    };
+
     const handleFetchBlogs = async () => {
         await GetEvaluationForm(dispatch);
     };
 
     const handleEdit = (blog) => {
         setEditMode(true);
-        setEditId(blog._id);
+        setEditId(blog.id);
         setFormData({
             title: blog.title,
-            category: blog.category.join(', '), // Convert array to comma-separated string
+            category: blog.category, // Convert array to comma-separated string
             description: blog.description,
             detailedInsights: blog.detailedInsights,
             quote: blog.quote,
             keyPoints: blog.keyPoints,
             keyInsights: blog.keyInsights,
             readTime: blog.readTime,
-            authorName: blog.author.authorName,
-            authorDesignation: blog.author.designation,
-            authorAbout: blog.author.about,
-            facebook: blog.author.socialMedia?.facebook || '', // Handle optional chaining
-            twitter: blog.author.socialMedia?.twitter || '', // Handle optional chaining
-            instagram: blog.author.socialMedia?.instagram || '', // Handle optional chaining
+            authorName: blog.authorName,
+            authorDesignation: blog.designation,
+            authorAbout: blog.about,
+            facebook: blog.socialMedia?.facebook || '', // Handle optional chaining
+            twitter: blog.socialMedia?.twitter || '', // Handle optional chaining
+            instagram: blog.socialMedia?.instagram || '', // Handle optional chaining
         });
         handleShow();
     };
@@ -204,20 +213,12 @@ const Evaluation = () => {
                             </tr>
                         ) : (
                             evaluationform?.map((blog, i) => (
-                                <tr key={blog._id}>
+                                <tr key={blog.id}>
                                     <td>{i + 1}</td>
                                     <td>{blog.title}</td>
-                                    <td>
-                                        <ul>
-                                            {blog.category.map((cat, j) => (
-                                                <li key={j}>
-                                                    {cat}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </td>
+                                    <td>{blog.category}</td>
                                     <td>{blog.readTime}</td>
-                                    <td>{blog.author.authorName}</td>
+                                    <td>{blog.authorName}</td>
                                     <td>
                                         <img alt='img1' loading='lazy' width={130} height={100} src={blog.image} />
                                     </td>
@@ -225,10 +226,14 @@ const Evaluation = () => {
                                         <img alt='img2' loading='lazy' width={130} height={100} src={blog.image2} />
                                     </td>
                                     <td>
-                                        <CiEdit onClick={() => handleEdit(blog)} style={{ cursor: 'pointer', color: 'green', fontSize: '30px' }} />
+                                        <button onClick={() => handleEdit(blog)} className='btn btn-primary'>
+                                            <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                        </button>
                                     </td>
                                     <td>
-                                        <MdDelete onClick={() => handleVerify(blog._id)} style={{ cursor: 'pointer', color: 'red', fontSize: '30px' }} />
+                                        <button onClick={() => handleVerify(blog.id)} className='btn btn-danger'>
+                                            <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))
@@ -257,19 +262,30 @@ const Evaluation = () => {
                             <Form.Label>Category</Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Enter categories separated by commas"
+                                placeholder="Enter Category"
                                 value={formData.category}
                                 onChange={(e) => setFormData({ ...formData, category: e.target.value.split(', ') })}
                             />
                         </Form.Group>
                         <Form.Group controlId="formDescription">
                             <Form.Label>Description</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                placeholder="Enter description"
+                            <ReactQuill
                                 value={formData.description}
-                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                onChange={handleDescriptionChange}
+                                modules={{
+                                    toolbar: [
+                                        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                        [{ 'align': [] }],
+                                        ['link', 'image'],
+                                        ['clean']
+                                    ],
+                                }}
+                                formats={[
+                                    'header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'align', 'link', 'image'
+                                ]}
+                                placeholder="Enter description"
                             />
                         </Form.Group>
                         <Form.Group controlId="formDetailedInsights">
@@ -457,8 +473,8 @@ const Evaluation = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
-                        Save Changes
+                    <Button variant="primary" disabled={isFetching} onClick={handleSubmit}>
+                        {isFetching ? 'Please wait while we add your blog' : 'Submit'}
                     </Button>
                 </Modal.Footer>
             </Modal>

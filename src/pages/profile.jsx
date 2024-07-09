@@ -7,7 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import { GetProfile, updateProfile } from '../Redux/ApiCalls'; // Adjust the path as necessary
 import LoadingBox from '../components/layout/LoadingBox'; // Ensure you have this component
 import MessageBox from '../components/layout/MessageBox'; // Ensure you have this component
-import UpdateProfileModal from './UpdateProfile'; // Ensure you have this component
+import UpdateProfile from './UpdateProfile'; // Ensure you have this component
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -19,10 +19,6 @@ const Profile = () => {
     });
 
     useEffect(() => {
-        dispatch(GetProfile());
-    }, [dispatch]);
-
-    useEffect(() => {
         if (userInfo) {
             setFormData({
                 name: userInfo.name,
@@ -30,6 +26,15 @@ const Profile = () => {
             });
         }
     }, [userInfo]);
+
+    const handleFetchProfile = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            await GetProfile(dispatch);
+        }
+    }
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,16 +44,18 @@ const Profile = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(updateProfile(formData));
+        const token = localStorage.getItem('token');
+        if (token) {
+            console.log(formData)
+            await updateProfile(dispatch, formData);
+        }
         setModalShow(false);
     };
-
-    const getDateTime = (date) => {
-        return new Date(date).toLocaleString();
-    };
-
+    useEffect(() => {
+        handleFetchProfile()
+    }, []);
     return (
         <motion.div
             initial={{ x: "100%" }}
@@ -58,7 +65,7 @@ const Profile = () => {
         >
             <Container fluid className="py-3">
                 {isFetching ? (
-                    <LoadingBox></LoadingBox>
+                    <LoadingBox />
                 ) : error ? (
                     <MessageBox variant="danger">{errMsg}</MessageBox>
                 ) : (
@@ -77,41 +84,23 @@ const Profile = () => {
                             </Card.Header>
                             <Card.Body>
                                 <Row>
-                                    <Col md={4}>
-                                        {isFetching ? (
-                                            <Skeleton height={200} />
-                                        ) : (
-                                            <img
-                                                style={{
-                                                    borderRadius: "5px",
-                                                }}
-                                                src={userInfo.avatar}
-                                                alt=""
-                                                className="img-fluid"
-                                                width={"200px"}
-                                                height={"200px"}
-                                            />
-                                        )}
-                                    </Col>
-                                </Row>
-                                <Row>
                                     <Col md={6}>
                                         <p className="mb-0">
                                             <strong>Name</strong>
                                         </p>
-                                        <p>{isFetching ? <Skeleton /> : userInfo.name}</p>
+                                        <p>{isFetching ? <Skeleton /> : userInfo?.name}</p>
                                     </Col>
                                     <Col md={6}>
                                         <p className="mb-0">
                                             <strong>Email</strong>
                                         </p>
-                                        <p>{isFetching ? <Skeleton /> : userInfo.email}</p>
+                                        <p>{isFetching ? <Skeleton /> : userInfo?.email}</p>
                                     </Col>
                                 </Row>
                             </Card.Body>
                         </Card>
 
-                        <UpdateProfileModal
+                        <UpdateProfile
                             show={modalShow}
                             onHide={() => setModalShow(false)}
                             handleChange={handleChange}

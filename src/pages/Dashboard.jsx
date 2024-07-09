@@ -6,6 +6,7 @@ import CardQueries from '../components/CardQueries';
 import CardProjects from "../components/CardProjects";
 import CardFeedbacks from '../components/CardFeedbacks';
 import CardReviews from '../components/CardReviews';
+import CardTransactions from '../components/CardTransactions';
 
 const Dashboard = () => {
   const [Data, setData] = useState({
@@ -14,7 +15,8 @@ const Dashboard = () => {
     totalContributors: 0,
     totalProjects: 0,
     totalFeedbacks: 0,
-    totalReviews: 0
+    totalReviews: 0,
+    totalTransactions: 0
   })
   const getDashboard = async () => {
     const { data } = await axiosInstance('api/users/dashboard');
@@ -40,10 +42,11 @@ const Dashboard = () => {
       <div className='mb-3 row'>
         {/* <CardForDash total={Data.totalBlogs} /> */}
         {/* <CardContributor total={Data.totalContributors} /> */}
-        <CardQueries total={Data.totalQueries} />
         <CardProjects total={Data.totalProjects} />
+        <CardReviews total={Data.totalBlogs} />
+        <CardQueries total={Data.totalQueries} />
         <CardFeedbacks total={Data.totalFeedbacks} />
-        <CardReviews total={Data.totalReviews} />
+        {/* <CardTransactions total={Data.totalTransactions} /> */}
       </div>
     </div>
   )

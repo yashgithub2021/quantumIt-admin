@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
 import { generateRandomSixDigitNumber } from '../utils/function';
+import { FaEye } from "react-icons/fa";
 
 const Clinic = () => {
     const formDataObj = new FormData();
@@ -215,26 +216,30 @@ const Clinic = () => {
                                                 <td>
                                                     <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
                                                 </td>
-                                                <td onClick={() => {
-                                                    handleShow(); setIsEdit(true); setFormData({
-                                                        name: clinic.name,
-                                                        description: clinic.description,
-                                                        description2: clinic.description2,
-                                                        clientName: clinic.clientName,
-                                                        date: clinic.date,
-                                                        image: clinic.image,
-                                                        imageTwo: clinic.imageTwo,
-                                                        liveLink: clinic.liveLink,
-                                                        category: clinic.category,
-                                                        keyPoints: clinic.keyPoints,
-                                                        keyInsights: clinic.keyInsights,
-                                                        aboutProject: clinic.aboutProject,
-                                                    }); setUpdateToId(clinic._id);
-                                                }} className='text-primary'>
-                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                <td className='text-primary'>
+                                                    <button onClick={() => {
+                                                        handleShow(); setIsEdit(true); setFormData({
+                                                            name: clinic.name,
+                                                            description: clinic.description,
+                                                            description2: clinic.description2,
+                                                            clientName: clinic.clientName,
+                                                            date: clinic.date,
+                                                            image: clinic.image,
+                                                            imageTwo: clinic.imageTwo,
+                                                            liveLink: clinic.liveLink,
+                                                            category: clinic.category,
+                                                            keyPoints: clinic.keyPoints,
+                                                            keyInsights: clinic.keyInsights,
+                                                            aboutProject: clinic.aboutProject,
+                                                        }); setUpdateToId(clinic._id);
+                                                    }} className='btn btn-primary'>
+                                                        <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
-                                                <td onClick={() => { handleDelete(clinic._id) }}>
-                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                <td >
+                                                    <button onClick={() => { handleDelete(clinic._id) }} className='btn btn-danger'>
+                                                        <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
                                             </tr>)}
                                 </tbody>
@@ -281,26 +286,30 @@ const Clinic = () => {
                                                 <td>
                                                     <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
                                                 </td>
-                                                <td onClick={() => {
-                                                    handleShow(); setIsEdit(true); setFormData({
-                                                        name: clinic.name,
-                                                        description: clinic.description,
-                                                        description2: clinic.description2,
-                                                        clientName: clinic.clientName,
-                                                        date: clinic.date,
-                                                        image: clinic.image,
-                                                        imageTwo: clinic.imageTwo,
-                                                        liveLink: clinic.liveLink,
-                                                        category: clinic.category,
-                                                        keyPoints: clinic.keyPoints,
-                                                        keyInsights: clinic.keyInsights,
-                                                        aboutProject: clinic.aboutProject,
-                                                    }); setUpdateToId(clinic._id);
-                                                }} className='text-primary'>
-                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                <td className='text-primary'>
+                                                    <button onClick={() => {
+                                                        handleShow(); setIsEdit(true); setFormData({
+                                                            name: clinic.name,
+                                                            description: clinic.description,
+                                                            description2: clinic.description2,
+                                                            clientName: clinic.clientName,
+                                                            date: clinic.date,
+                                                            image: clinic.image,
+                                                            imageTwo: clinic.imageTwo,
+                                                            liveLink: clinic.liveLink,
+                                                            category: clinic.category,
+                                                            keyPoints: clinic.keyPoints,
+                                                            keyInsights: clinic.keyInsights,
+                                                            aboutProject: clinic.aboutProject,
+                                                        }); setUpdateToId(clinic._id);
+                                                    }} className='btn btn-primary'>
+                                                        <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
-                                                <td onClick={() => { handleDelete(clinic._id) }}>
-                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                <td >
+                                                    <button onClick={() => { handleDelete(clinic._id) }} className='btn btn-danger'>
+                                                        <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
                                             </tr>)}
                                 </tbody>
@@ -347,26 +356,30 @@ const Clinic = () => {
                                                 <td>
                                                     <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
                                                 </td>
-                                                <td onClick={() => {
-                                                    handleShow(); setIsEdit(true); setFormData({
-                                                        name: clinic.name,
-                                                        description: clinic.description,
-                                                        description2: clinic.description2,
-                                                        clientName: clinic.clientName,
-                                                        date: clinic.date,
-                                                        image: clinic.image,
-                                                        imageTwo: clinic.imageTwo,
-                                                        liveLink: clinic.liveLink,
-                                                        category: clinic.category,
-                                                        keyPoints: clinic.keyPoints,
-                                                        keyInsights: clinic.keyInsights,
-                                                        aboutProject: clinic.aboutProject,
-                                                    }); setUpdateToId(clinic._id);
-                                                }} className='text-primary'>
-                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                <td className='text-primary'>
+                                                    <button onClick={() => {
+                                                        handleShow(); setIsEdit(true); setFormData({
+                                                            name: clinic.name,
+                                                            description: clinic.description,
+                                                            description2: clinic.description2,
+                                                            clientName: clinic.clientName,
+                                                            date: clinic.date,
+                                                            image: clinic.image,
+                                                            imageTwo: clinic.imageTwo,
+                                                            liveLink: clinic.liveLink,
+                                                            category: clinic.category,
+                                                            keyPoints: clinic.keyPoints,
+                                                            keyInsights: clinic.keyInsights,
+                                                            aboutProject: clinic.aboutProject,
+                                                        }); setUpdateToId(clinic._id);
+                                                    }} className='btn btn-primary'>
+                                                        <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
-                                                <td onClick={() => { handleDelete(clinic._id) }}>
-                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                <td >
+                                                    <button onClick={() => { handleDelete(clinic._id) }} className='btn btn-danger'>
+                                                        <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
                                             </tr>)}
                                 </tbody>
@@ -413,26 +426,30 @@ const Clinic = () => {
                                                 <td>
                                                     <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
                                                 </td>
-                                                <td onClick={() => {
-                                                    handleShow(); setIsEdit(true); setFormData({
-                                                        name: clinic.name,
-                                                        description: clinic.description,
-                                                        description2: clinic.description2,
-                                                        clientName: clinic.clientName,
-                                                        date: clinic.date,
-                                                        image: clinic.image,
-                                                        imageTwo: clinic.imageTwo,
-                                                        liveLink: clinic.liveLink,
-                                                        category: clinic.category,
-                                                        keyPoints: clinic.keyPoints,
-                                                        keyInsights: clinic.keyInsights,
-                                                        aboutProject: clinic.aboutProject,
-                                                    }); setUpdateToId(clinic._id);
-                                                }} className='text-primary'>
-                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                <td className='text-primary'>
+                                                    <button onClick={() => {
+                                                        handleShow(); setIsEdit(true); setFormData({
+                                                            name: clinic.name,
+                                                            description: clinic.description,
+                                                            description2: clinic.description2,
+                                                            clientName: clinic.clientName,
+                                                            date: clinic.date,
+                                                            image: clinic.image,
+                                                            imageTwo: clinic.imageTwo,
+                                                            liveLink: clinic.liveLink,
+                                                            category: clinic.category,
+                                                            keyPoints: clinic.keyPoints,
+                                                            keyInsights: clinic.keyInsights,
+                                                            aboutProject: clinic.aboutProject,
+                                                        }); setUpdateToId(clinic._id);
+                                                    }} className='btn btn-primary'>
+                                                        <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
-                                                <td onClick={() => { handleDelete(clinic._id) }}>
-                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                <td >
+                                                    <button onClick={() => { handleDelete(clinic._id) }} className='btn btn-danger'>
+                                                        <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
                                             </tr>)}
                                 </tbody>
@@ -479,26 +496,30 @@ const Clinic = () => {
                                                 <td>
                                                     <img alt='product' loading='lazy' width={130} height={100} src={clinic?.portfolioImage} />
                                                 </td>
-                                                <td onClick={() => {
-                                                    handleShow(); setIsEdit(true); setFormData({
-                                                        name: clinic.name,
-                                                        description: clinic.description,
-                                                        description2: clinic.description2,
-                                                        clientName: clinic.clientName,
-                                                        date: clinic.date,
-                                                        image: clinic.image,
-                                                        imageTwo: clinic.imageTwo,
-                                                        liveLink: clinic.liveLink,
-                                                        category: clinic.category,
-                                                        keyPoints: clinic.keyPoints,
-                                                        keyInsights: clinic.keyInsights,
-                                                        aboutProject: clinic.aboutProject,
-                                                    }); setUpdateToId(clinic._id);
-                                                }} className='text-primary'>
-                                                    <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                                <td className='text-primary'>
+                                                    <button onClick={() => {
+                                                        handleShow(); setIsEdit(true); setFormData({
+                                                            name: clinic.name,
+                                                            description: clinic.description,
+                                                            description2: clinic.description2,
+                                                            clientName: clinic.clientName,
+                                                            date: clinic.date,
+                                                            image: clinic.image,
+                                                            imageTwo: clinic.imageTwo,
+                                                            liveLink: clinic.liveLink,
+                                                            category: clinic.category,
+                                                            keyPoints: clinic.keyPoints,
+                                                            keyInsights: clinic.keyInsights,
+                                                            aboutProject: clinic.aboutProject,
+                                                        }); setUpdateToId(clinic._id);
+                                                    }} className='btn btn-primary'>
+                                                        <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
-                                                <td onClick={() => { handleDelete(clinic._id) }}>
-                                                    <MdDelete style={{ color: 'red', fontSize: '30px' }} />
+                                                <td >
+                                                    <button onClick={() => { handleDelete(clinic._id) }} className='btn btn-danger'>
+                                                        <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                                    </button>
                                                 </td>
                                             </tr>)}
                                 </tbody>

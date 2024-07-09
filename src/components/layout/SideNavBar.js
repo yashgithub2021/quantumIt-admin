@@ -1,11 +1,16 @@
 import "./SideNavBar.css";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MdCreateNewFolder, MdFormatListBulletedAdd, MdLogout, MdDashboard, MdOutlineMiscellaneousServices, MdContentPasteGo, MdOutlineSwipeRight, MdOutlineLocalHospital } from "react-icons/md";
+import { MdCreateNewFolder, MdOutlineFeedback, MdFormatListBulletedAdd, MdLogout, MdDashboard, MdOutlineMiscellaneousServices, MdContentPasteGo, MdOutlineSwipeRight, MdOutlineLocalHospital } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../Redux/Slices/AuthSlice";
 import logo from "../../logo-white.png"
 import logo2 from "../../web_icon.png"
+import { FaLaptop } from "react-icons/fa";
+import { GrContact } from "react-icons/gr";
+import { PiReadCvLogoFill } from "react-icons/pi";
+import { BsPersonVcardFill } from "react-icons/bs";
+
 const linkList = [
   {
     icon: <MdDashboard className="icon-md" />,
@@ -13,17 +18,17 @@ const linkList = [
     url: "/admin/dashboard"
   },
   {
-    icon: <MdOutlineLocalHospital className="icon-md" />,
+    icon: <FaLaptop className="icon-md" />,
     text: "Projects",
     url: "/admin/add-project"
   },
+  // {
+  //   icon: <MdContentPasteGo className="icon-md" />,
+  //   text: "F.A.Q.",
+  //   url: "/admin/pres-form"
+  // },
   {
-    icon: <MdContentPasteGo className="icon-md" />,
-    text: "F.A.Q.",
-    url: "/admin/pres-form"
-  },
-  {
-    icon: <MdFormatListBulletedAdd className="icon-md" />,
+    icon: <BsPersonVcardFill className="icon-md" />,
     text: "Blogs",
     url: "/admin/eval-form"
   },
@@ -33,12 +38,12 @@ const linkList = [
   //   url: "/admin/add-contributor"
   // },
   {
-    icon: <MdOutlineSwipeRight className="icon-md" />,
+    icon: <GrContact className="icon-md" />,
     text: "Contact us",
     url: "/admin/slots"
   },
   {
-    icon: <MdOutlineMiscellaneousServices className="icon-md" />,
+    icon: <MdOutlineFeedback className="icon-md" />,
     text: "Feedback ",
     url: "/admin/plans"
   },

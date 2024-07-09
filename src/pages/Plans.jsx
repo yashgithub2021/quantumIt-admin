@@ -13,6 +13,7 @@ import { CiEdit } from "react-icons/ci";
 import { generateRandomSixDigitNumber } from '../utils/function';
 import axiosInstance from '../utils/axiosUtil';
 import { MdDelete } from 'react-icons/md';
+import { FaEye } from 'react-icons/fa';
 
 const Plans = () => {
     const [loading, setLoading] = useState(false);
@@ -161,10 +162,14 @@ const Plans = () => {
                                         <td>{plan.name}</td>
                                         <td>{plan.designation}</td>
                                         <td>
-                                            <CiEdit onClick={() => handleEdit(plan)} style={{ color: 'green', fontSize: '30px', cursor: 'pointer' }} />
+                                            <button onClick={() => handleEdit(plan)} className='btn btn-primary'>
+                                                <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                            </button>
                                         </td>
                                         <td>
-                                            <MdDelete onClick={() => handleDelete(plan._id)} style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} />
+                                            <button onClick={() => handleDelete(plan._id)} className='btn btn-danger'>
+                                                <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                            </button>
                                         </td>
                                     </tr>)}
                         </tbody>

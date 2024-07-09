@@ -1,15 +1,22 @@
+import CountUp from "react-countup";
+
 function CardQueries(props) {
     return (
         <div className='col-lg-3 col-sm-6'>
             <div class="small-box " style={{ background: '#6610f2' }}>
                 <div class="inner">
-                    <h3>{props.total}</h3>
-                    <p>Total Reviews</p>
+                    <h3>
+                        <CountUp end={props.total}
+                            useGrouping={false}
+                            duration={"2"} />
+                    </h3>
+                    <p>Total Blogs</p>
                 </div>
                 <div class="icon">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 20 20" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4C2.89 4 2 4.89 2 6v12c0 1.1.89 2 2 2h16c1.11 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 12H4V6h16v10zM7 10h10v2H7v-2zm0 4h10v2H7v-2z"></path>
                     </svg>
+
                 </div>
             </div>
         </div>

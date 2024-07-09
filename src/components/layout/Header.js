@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaUserCircle } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useSelector } from "react-redux";
 
@@ -28,20 +28,20 @@ export default function Header({ sidebarHandler }) {
                   id="user_profile"
                   className="right-profile-logo"
                 >
-                  {/* <FaUserCircle size={"25px"} /> */}
+                  <FaUserCircle size={"25px"} />
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
                   <Dropdown.Header>
                     Signed in as
                     <br />
-                    <b>{userInfo.fullname}</b>
+                    <b>{userInfo.name}</b>
                   </Dropdown.Header>
 
                   <Dropdown.Divider />
                   <Dropdown.Item>
-                    <Link to="/view-profile/" className="dropdown-item">
-                      <FaUser className="me-2" /> Profile
+                    <Link to="/admin/view-profile" className="dropdown-item">
+                      <FaUser className="me-2" style={{ color: 'black' }} /> Profile
                     </Link>
                   </Dropdown.Item>
                 </Dropdown.Menu>

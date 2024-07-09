@@ -1,9 +1,15 @@
+import CountUp from "react-countup";
+
 function CardQueries(props) {
     return (
         <div className='col-lg-3 col-sm-6'>
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{props.total}</h3>
+                    <h3>
+                        <CountUp end={props.total}
+                            useGrouping={false}
+                            duration={"2"} />
+                    </h3>
                     <p>Total Queries</p>
                 </div>
                 <div class="icon">
