@@ -53,8 +53,8 @@ const Slots = () => {
                         Add Query
                     </Button>
                 </Card.Header> */}
-                        <Card.Body>
-                            <Table striped bordered hover>
+                        <Card.Body style={{ overflowX: 'scroll' }}>
+                            <Table striped bordered hover >
                                 <thead>
                                     <tr>
                                         <th>#</th>
