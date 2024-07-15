@@ -7,7 +7,7 @@ import { logOut } from "../../Redux/Slices/AuthSlice";
 import logo from "../../logo-white.png"
 import logo2 from "../../web_icon.png"
 import { FaLaptop } from "react-icons/fa";
-import { GrContact } from "react-icons/gr";
+import { GrContact, GrTransaction } from "react-icons/gr";
 import { PiReadCvLogoFill } from "react-icons/pi";
 import { BsPersonVcardFill } from "react-icons/bs";
 
@@ -46,6 +46,11 @@ const linkList = [
     icon: <MdOutlineFeedback className="icon-md" />,
     text: "Feedback ",
     url: "/admin/plans"
+  },
+  {
+    icon: <GrTransaction className="icon-md" />,
+    text: "Transactions ",
+    url: "/admin/transactions"
   },
 ];
 

@@ -32,7 +32,7 @@ const EvaluatiionSlice = createSlice({
             state.isFetching = false;
         },
         addEvalFailure: (state, action) => {
-            state.errMsg = action.payload;
+            state.errMsg = action;
             state.isFetching = false;
             state.error = true;
         },

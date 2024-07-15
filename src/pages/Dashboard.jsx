@@ -46,7 +46,7 @@ const Dashboard = () => {
         <CardReviews total={Data.totalBlogs} />
         <CardQueries total={Data.totalQueries} />
         <CardFeedbacks total={Data.totalFeedbacks} />
-        {/* <CardTransactions total={Data.totalTransactions} /> */}
+        <CardTransactions total={Data.totalTransactions} />
       </div>
     </div>
   )

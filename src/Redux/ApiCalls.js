@@ -91,9 +91,33 @@ import {
     updateClinicFailure
 } from './Slices/ClinicSlice';
 
+import {
+    fetchTransactionsStart,
+    fetchTransactionsSuccess,
+    fetchTransactionsFailure
+} from './Slices/TransactionSlice'
+
 import axiosInstance from '../utils/axiosUtil';
 const token = localStorage.getItem("token");
 
+
+export const getTransactions = async (dispatch) => {
+    dispatch(fetchTransactionsStart());
+    try {
+        const token = localStorage.getItem("token");
+        const response = await axiosInstance.get('/api/transactions/get-transactions', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        dispatch(fetchTransactionsSuccess(response.data));
+    } catch (error) {
+        const errorMsg = error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+        dispatch(fetchTransactionsFailure(errorMsg));
+    }
+};
 export const GetAllDoctors = async (dispatch) => {
     dispatch(getAllDocStart());
     try {
@@ -325,18 +349,24 @@ export const CreateFaq = async (dispatch, formdata) => {
 }
 
 export const SetEvaluationForm = async (dispatch, formdata) => {
-    dispatch(addEvalStart());
     try {
+        dispatch(addEvalStart());
+
+        const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+        if (!token) throw new Error('No token found');
+
         const { data } = await axiosInstance.post("/api/blogs/blog", formdata, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
+
         dispatch(addEvalSuccess(data));
     } catch (error) {
-        dispatch(addEvalFailure(error?.response?.data?.error));
+        const errorMessage = error.response?.data?.error || error.message || 'Something went wrong';
+        dispatch(addEvalFailure(errorMessage));
     }
-}
+};
 
 export const GetEvaluationForm = async (dispatch) => {
     dispatch(getAllEvalStart());

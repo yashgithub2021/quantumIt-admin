@@ -109,7 +109,18 @@ const Evaluation = () => {
         handleShow();
     };
 
+    const validateFormData = () => {
+        const { title, category, description, detailedInsights, quote, keyPoints, keyInsights, readTime, authorName, authorDesignation, authorAbout, facebook, twitter, instagram, blogImage, blogImage2, authorProfile } = formData;
+
+        if (!title || !category.length || !description || !detailedInsights || !quote || !keyPoints.length || !keyInsights.length || !readTime || !authorName || !authorDesignation || !authorAbout || !facebook || !twitter || !instagram) {
+            toast.error("Please fill all the required fields.", toastOptions);
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async () => {
+        if (!validateFormData()) return;
         const form = new FormData();
         // for (let key in formData) {
         //     form.append(key, formData[key]);
@@ -135,7 +146,8 @@ const Evaluation = () => {
             }
         } else {
             // console.log(form.entries())
-            await SetEvaluationForm(dispatch, form);
+            const blog = await SetEvaluationForm(dispatch, form);
+            console.log(isFetching, error, errMsg)
             if (!isFetching && !error) {
                 toast.success("Blog Added Successfully", toastOptions);
                 handleClose();

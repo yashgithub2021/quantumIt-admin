@@ -13,6 +13,7 @@ import AddProject from "./pages/AddProject";
 import Slots from "./pages/Slots";
 import Plans from "./pages/Plans";
 import Profile from "./pages/profile";
+import Transactions from "./pages/Transactions";
 function App() {
   const { token } = useSelector(state => state.auth);
   const pageLocation = useLocation();
@@ -29,6 +30,7 @@ function App() {
     { path: "/admin/slots", comp: <Slots /> },
     { path: "/admin/plans", comp: <Plans /> },
     { path: "/admin/view-profile", comp: <Profile /> },
+    { path: "/admin/transactions", comp: <Transactions /> },
   ];
   return (
     <div className="main-wrapper">

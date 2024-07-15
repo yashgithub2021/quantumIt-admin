@@ -6,6 +6,7 @@ import EvalSlice from "./Slices/EvalSlice";
 import ClinicSlice from "./Slices/ClinicSlice";
 import SlotSlice from "./Slices/SlotSlice";
 import PlanSlice from "./Slices/PlanSlice";
+import TransactionSlice from "./Slices/TransactionSlice";
 
 export default configureStore({
     reducer: {
@@ -15,6 +16,7 @@ export default configureStore({
         eval: EvalSlice,
         clinic: ClinicSlice,
         slot: SlotSlice,
-        plan: PlanSlice
+        plan: PlanSlice,
+        transactions: TransactionSlice
     }
 })
