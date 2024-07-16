@@ -354,6 +354,7 @@ export const SetEvaluationForm = async (dispatch, formdata) => {
 
         const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
         if (!token) throw new Error('No token found');
+        console.log('Token found:', token);
 
         const { data } = await axiosInstance.post("/api/blogs/blog", formdata, {
             headers: {
@@ -361,12 +362,18 @@ export const SetEvaluationForm = async (dispatch, formdata) => {
             },
         });
 
+        console.log("Response data:", data);
+        console.log("Status:", data.status);
+
         dispatch(addEvalSuccess(data));
     } catch (error) {
+        console.log('Error occurred:', error);
+
         const errorMessage = error.response?.data?.error || error.message || 'Something went wrong';
         dispatch(addEvalFailure(errorMessage));
     }
 };
+
 
 export const GetEvaluationForm = async (dispatch) => {
     dispatch(getAllEvalStart());

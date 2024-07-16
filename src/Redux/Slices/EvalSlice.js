@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const EvaluatiionSlice = createSlice({
+const EvaluationSlice = createSlice({
     name: "evaluation",
     initialState: {
         isFetching: false,
@@ -9,7 +9,7 @@ const EvaluatiionSlice = createSlice({
         evaluationform: []
     },
     reducers: {
-        getAllEvalStart: (state, action) => {
+        getAllEvalStart: (state) => {
             state.isFetching = true;
             state.error = false;
         },
@@ -23,16 +23,16 @@ const EvaluatiionSlice = createSlice({
             state.isFetching = false;
             state.error = true;
         },
-        addEvalStart: (state, action) => {
+        addEvalStart: (state) => {
             state.isFetching = true;
             state.error = false;
         },
-        addEvalSuccess: (state, action) => {
+        addEvalSuccess: (state) => {
             state.error = false;
             state.isFetching = false;
         },
         addEvalFailure: (state, action) => {
-            state.errMsg = action;
+            state.errMsg = action.payload;
             state.isFetching = false;
             state.error = true;
         },
@@ -83,6 +83,6 @@ export const {
     updateEvalStart,
     updateEvalSuccess,
     updateEvalFailure
-} = EvaluatiionSlice.actions;
+} = EvaluationSlice.actions;
 
-export default EvaluatiionSlice.reducer;
+export default EvaluationSlice.reducer;

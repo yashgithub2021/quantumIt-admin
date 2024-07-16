@@ -39,43 +39,23 @@ const Evaluation = () => {
     const handleShow = () => setShow(true);
     const [formData, setFormData] = useState({
         title: '',
-        category: [],
+        category: '',
         description: '',
-        detailedInsights: '',
         quote: '',
-        keyPoints: [],
-        keyInsights: [],
         readTime: '',
-        authorName: '',
-        authorDesignation: '',
-        authorAbout: '',
-        facebook: '',
-        twitter: '',
-        instagram: '',
         blogImage: null,
         blogImage2: null,
-        authorProfile: null,
     });
 
     const resetForm = () => {
         setFormData({
             title: '',
-            category: [],
+            category: '',
             description: '',
-            detailedInsights: '',
             quote: '',
-            keyPoints: [],
-            keyInsights: [],
             readTime: '',
-            authorName: '',
-            authorDesignation: '',
-            authorAbout: '',
-            facebook: '',
-            twitter: '',
-            instagram: '',
             blogImage: null,
             blogImage2: null,
-            authorProfile: null,
         });
     };
 
@@ -94,17 +74,8 @@ const Evaluation = () => {
             title: blog.title,
             category: blog.category, // Convert array to comma-separated string
             description: blog.description,
-            detailedInsights: blog.detailedInsights,
             quote: blog.quote,
-            keyPoints: blog.keyPoints,
-            keyInsights: blog.keyInsights,
             readTime: blog.readTime,
-            authorName: blog.authorName,
-            authorDesignation: blog.designation,
-            authorAbout: blog.about,
-            facebook: blog.socialMedia?.facebook || '', // Handle optional chaining
-            twitter: blog.socialMedia?.twitter || '', // Handle optional chaining
-            instagram: blog.socialMedia?.instagram || '', // Handle optional chaining
         });
         handleShow();
     };
@@ -112,7 +83,7 @@ const Evaluation = () => {
     const validateFormData = () => {
         const { title, category, description, detailedInsights, quote, keyPoints, keyInsights, readTime, authorName, authorDesignation, authorAbout, facebook, twitter, instagram, blogImage, blogImage2, authorProfile } = formData;
 
-        if (!title || !category.length || !description || !detailedInsights || !quote || !keyPoints.length || !keyInsights.length || !readTime || !authorName || !authorDesignation || !authorAbout || !facebook || !twitter || !instagram) {
+        if (!title || !category || !description || !quote || !readTime) {
             toast.error("Please fill all the required fields.", toastOptions);
             return false;
         }
@@ -122,9 +93,6 @@ const Evaluation = () => {
     const handleSubmit = async () => {
         if (!validateFormData()) return;
         const form = new FormData();
-        // for (let key in formData) {
-        //     form.append(key, formData[key]);
-        // }
 
         for (const key in formData) {
             if (formData.hasOwnProperty(key)) {
@@ -138,23 +106,30 @@ const Evaluation = () => {
             }
         }
 
-        if (editMode && editId) {
-            await UpdateEvaluationForm(dispatch, editId, form);
-            if (!isFetching && !error) {
-                toast.success("Blog Updated Successfully", toastOptions);
-                handleClose();
+        try {
+            if (editMode && editId) {
+                await UpdateEvaluationForm(dispatch, editId, form);
+                if (!isFetching && !error) {
+                    toast.success("Blog Updated Successfully", toastOptions);
+                    handleClose();
+                }
+            } else {
+                const blog = await SetEvaluationForm(dispatch, form);
+                console.log('Response from SetEvaluationForm:', blog);
+                console.log('State after dispatch:', isFetching, error, errMsg);
+
+                if (!isFetching && !error) {
+                    toast.success("Blog Added Successfully", toastOptions);
+                    handleClose();
+                }
             }
-        } else {
-            // console.log(form.entries())
-            const blog = await SetEvaluationForm(dispatch, form);
-            console.log(isFetching, error, errMsg)
-            if (!isFetching && !error) {
-                toast.success("Blog Added Successfully", toastOptions);
-                handleClose();
-            }
+        } catch (e) {
+            console.error('Error occurred:', e);
         }
+
         await handleFetchBlogs();
     };
+
 
     const handleVerify = (id) => {
         setValidator(generateRandomSixDigitNumber());
@@ -212,7 +187,6 @@ const Evaluation = () => {
                             <th>Title</th>
                             <th>Category</th>
                             <th>Read Time</th>
-                            <th>Author</th>
                             <th>Image1</th>
                             <th>Image2</th>
                             <th colSpan={2}>Actions</th>
@@ -230,7 +204,6 @@ const Evaluation = () => {
                                     <td>{blog.title}</td>
                                     <td>{blog.category}</td>
                                     <td>{blog.readTime}</td>
-                                    <td>{blog.authorName}</td>
                                     <td>
                                         <img alt='img1' loading='lazy' width={130} height={100} src={blog.image} />
                                     </td>
@@ -276,7 +249,7 @@ const Evaluation = () => {
                                 type="text"
                                 placeholder="Enter Category"
                                 value={formData.category}
-                                onChange={(e) => setFormData({ ...formData, category: e.target.value.split(', ') })}
+                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                             />
                         </Form.Group>
                         <Form.Group controlId="formDescription">
@@ -300,7 +273,7 @@ const Evaluation = () => {
                                 placeholder="Enter description"
                             />
                         </Form.Group>
-                        <Form.Group controlId="formDetailedInsights">
+                        {/* <Form.Group controlId="formDetailedInsights">
                             <Form.Label>Detailed Insights</Form.Label>
                             <Form.Control
                                 as="textarea"
@@ -309,7 +282,7 @@ const Evaluation = () => {
                                 value={formData.detailedInsights}
                                 onChange={(e) => setFormData({ ...formData, detailedInsights: e.target.value })}
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group controlId="formQuote">
                             <Form.Label>Quote</Form.Label>
                             <Form.Control
@@ -319,7 +292,7 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
                             />
                         </Form.Group>
-                        <Form.Group controlId="formKeyPoints">
+                        {/* <Form.Group controlId="formKeyPoints">
                             <Form.Label>Key Points</Form.Label>
                             <ol>
                                 {formData?.keyPoints?.map((p, i) => (
@@ -360,8 +333,8 @@ const Evaluation = () => {
                                     Add
                                 </Button>
                             </InputGroup>
-                        </Form.Group>
-                        <Form.Group controlId="formKeyInsights">
+                        </Form.Group> */}
+                        {/* <Form.Group controlId="formKeyInsights">
                             <Form.Label>Key Insights</Form.Label>
                             <ol>
                                 {formData?.keyInsights?.map((p, i) => (
@@ -393,7 +366,7 @@ const Evaluation = () => {
                                     Add
                                 </Button>
                             </InputGroup>
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group controlId="formReadTime">
                             <Form.Label>Read Time</Form.Label>
                             <Form.Control
@@ -403,7 +376,7 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
                             />
                         </Form.Group>
-                        <Form.Group controlId="formAuthorName">
+                        {/* <Form.Group controlId="formAuthorName">
                             <Form.Label>Author Name</Form.Label>
                             <Form.Control
                                 type="text"
@@ -457,7 +430,7 @@ const Evaluation = () => {
                                 value={formData.instagram}
                                 onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group controlId="formBlogImage">
                             <Form.Label>Blog Image1</Form.Label>
                             <Form.Control
@@ -472,13 +445,13 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, blogImage2: e.target.files[0] })}
                             />
                         </Form.Group>
-                        <Form.Group controlId="formAuthorProfile">
+                        {/* <Form.Group controlId="formAuthorProfile">
                             <Form.Label>Author Profile Image</Form.Label>
                             <Form.Control
                                 type="file"
                                 onChange={(e) => setFormData({ ...formData, authorProfile: e.target.files[0] })}
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
