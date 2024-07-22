@@ -361,6 +361,28 @@ const Evaluation = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <Modal show={confirmShow} onHide={() => setconfirmShow(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Blog</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete this blog?</p>
+                    <p>Type <strong>{validator}</strong> to confirm your action!</p>
+                    <Form.Control
+                        type="number"
+                        value={verifyKey}
+                        onChange={(e) => setVerifyKey(e.target.value)}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setconfirmShow(false)}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={() => handleDelete()}>
+                        Confirm Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
