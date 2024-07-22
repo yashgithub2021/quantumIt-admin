@@ -98,6 +98,7 @@ import {
 } from './Slices/TransactionSlice'
 
 import axiosInstance from '../utils/axiosUtil';
+import { addCategoriesFailure, addCategoriestart, addCategoriesuccess, deleteCategoriesFailure, deleteCategoriestart, deleteCategoriesuccess, getAllCategoriesFailure, getAllCategoriesStart, getAllCategoriesSuccess } from './Slices/CategorySlice';
 const token = localStorage.getItem("token");
 
 
@@ -388,6 +389,39 @@ export const GetEvaluationForm = async (dispatch) => {
         dispatch(getAllEvalFailure(error?.response?.data?.error));
     }
 }
+
+export const GetCategories = async (dispatch) => {
+    dispatch(getAllCategoriesStart());
+    try {
+        const response = await axiosInstance.get("/api/categories/getCategories");
+        dispatch(getAllCategoriesSuccess(response.data));
+    } catch (error) {
+        dispatch(getAllCategoriesFailure(error.response ? error.response.data : 'Error occurred'));
+    }
+};
+
+// Add a new category
+export const AddCategory = async (dispatch, categoryData) => {
+    dispatch(addCategoriestart());
+    try {
+        const response = await axiosInstance.post("/api/categories/createCategory", categoryData);
+        dispatch(addCategoriesuccess({ category: response.data }));
+    } catch (error) {
+        dispatch(addCategoriesFailure(error.response ? error.response.data : 'Error occurred'));
+    }
+};
+
+// Delete a category
+export const DeleteCategory = async (dispatch, categoryId) => {
+    dispatch(deleteCategoriestart());
+    try {
+        await axiosInstance.delete(`/api/categories/${categoryId}`);
+        dispatch(deleteCategoriesuccess({ categoryId }));
+    } catch (error) {
+        dispatch(deleteCategoriesFailure(error.response ? error.response.data : 'Error occurred'));
+    }
+};
+
 
 export const DeleteEvaluationForm = async (dispatch, id) => {
     dispatch(deleteEvalStart());

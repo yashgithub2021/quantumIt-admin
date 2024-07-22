@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetEvaluationForm, SetEvaluationForm, UpdateEvaluationForm, DeleteEvaluationForm } from '../Redux/ApiCalls';
+import { GetEvaluationForm, SetEvaluationForm, UpdateEvaluationForm, DeleteEvaluationForm, GetCategories, AddCategory, DeleteCategory } from '../Redux/ApiCalls';
 import { InputGroup, Card, Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -10,14 +10,13 @@ import { toastOptions } from "../utils/error";
 import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
 import { FaEye } from "react-icons/fa";
-
-import { generateRandomSixDigitNumber } from '../utils/function';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import the styles
-
+import { generateRandomSixDigitNumber } from '../utils/function';
 
 const Evaluation = () => {
     const { isFetching, error, errMsg, evaluationform } = useSelector(state => state.eval);
+    const { Categories, isFetchingCat } = useSelector(state => state.categories);
     const dispatch = useDispatch();
     const [show, setShow] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -29,6 +28,8 @@ const Evaluation = () => {
     const [verifyKey, setVerifyKey] = useState(0);
     const [isEdit, setIsEdit] = useState(false);
     const [Id, setId] = useState(null);
+    const [categoryFormShow, setCategoryFormShow] = useState(false);
+    const [newCategory, setNewCategory] = useState('');
 
     const handleClose = () => {
         setShow(false);
@@ -36,6 +37,7 @@ const Evaluation = () => {
         setEditId(null);
         resetForm();
     };
+
     const handleShow = () => setShow(true);
     const [formData, setFormData] = useState({
         title: '',
@@ -67,12 +69,17 @@ const Evaluation = () => {
         await GetEvaluationForm(dispatch);
     };
 
+    const handleFetchCategories = async () => {
+        await GetCategories(dispatch);
+        console.log(Categories)
+    };
+
     const handleEdit = (blog) => {
         setEditMode(true);
         setEditId(blog.id);
         setFormData({
             title: blog.title,
-            category: blog.category, // Convert array to comma-separated string
+            category: blog.category,
             description: blog.description,
             quote: blog.quote,
             readTime: blog.readTime,
@@ -81,7 +88,7 @@ const Evaluation = () => {
     };
 
     const validateFormData = () => {
-        const { title, category, description, detailedInsights, quote, keyPoints, keyInsights, readTime, authorName, authorDesignation, authorAbout, facebook, twitter, instagram, blogImage, blogImage2, authorProfile } = formData;
+        const { title, category, description, quote, readTime } = formData;
 
         if (!title || !category || !description || !quote || !readTime) {
             toast.error("Please fill all the required fields.", toastOptions);
@@ -130,16 +137,15 @@ const Evaluation = () => {
         await handleFetchBlogs();
     };
 
-
     const handleVerify = (id) => {
         setValidator(generateRandomSixDigitNumber());
         setconfirmShow(true);
         setId(id);
-    }
+    };
 
     const handleDelete = async () => {
         if (confirmShow) {
-            if (validator === verifyKey, 10) {
+            if (validator === verifyKey) {
                 await DeleteEvaluationForm(dispatch, Id);
                 setconfirmShow(false);
                 setId(null);
@@ -153,13 +159,30 @@ const Evaluation = () => {
                 toast.error("Key doesn't match", toastOptions);
             }
         }
-    }
+    };
+
+    const handleAddCategory = async () => {
+        if (!newCategory) {
+            toast.error("Please enter a category name", toastOptions);
+            return;
+        }
+        await AddCategory(dispatch, { name: newCategory });
+        setNewCategory('');
+        setCategoryFormShow(false);
+        await handleFetchCategories();
+    };
+
+    const handleDeleteCategory = async (categoryId) => {
+        await DeleteCategory(dispatch, categoryId);
+        await handleFetchCategories();
+    };
 
     useEffect(() => {
         handleFetchBlogs();
+        handleFetchCategories();
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isFetching && error) {
             toast.error(errMsg?.message, toastOptions);
             handleClose();
@@ -226,9 +249,7 @@ const Evaluation = () => {
                     </tbody>
                 </Table>
             </div>
-            <Modal show={show} onHide={handleClose} size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered>
+            <Modal show={show} onHide={handleClose} size="lg" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>{editMode ? 'Edit Blog' : 'Add Blog'}</Modal.Title>
                 </Modal.Header>
@@ -245,44 +266,33 @@ const Evaluation = () => {
                         </Form.Group>
                         <Form.Group controlId="formCategory">
                             <Form.Label>Category</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter Category"
-                                value={formData.category}
-                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            />
+                            <div className="d-flex">
+                                <Form.Control
+                                    as="select"
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                >
+                                    <option value="">Select Category</option>
+                                    {Categories?.map((category) => (
+                                        <option key={category.id} value={category.name}>{category.name}</option>
+                                    ))}
+                                </Form.Control>
+                                <Button
+                                    variant="outline-secondary"
+                                    onClick={() => setCategoryFormShow(true)}
+                                    className="ml-2"
+                                >
+                                    Add
+                                </Button>
+                            </div>
                         </Form.Group>
                         <Form.Group controlId="formDescription">
                             <Form.Label>Description</Form.Label>
                             <ReactQuill
                                 value={formData.description}
                                 onChange={handleDescriptionChange}
-                                modules={{
-                                    toolbar: [
-                                        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                        [{ 'align': [] }],
-                                        ['link', 'image'],
-                                        ['clean']
-                                    ],
-                                }}
-                                formats={[
-                                    'header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline', 'strike', 'blockquote', 'align', 'link', 'image'
-                                ]}
-                                placeholder="Enter description"
                             />
                         </Form.Group>
-                        {/* <Form.Group controlId="formDetailedInsights">
-                            <Form.Label>Detailed Insights</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                placeholder="Enter detailed insights"
-                                value={formData.detailedInsights}
-                                onChange={(e) => setFormData({ ...formData, detailedInsights: e.target.value })}
-                            />
-                        </Form.Group> */}
                         <Form.Group controlId="formQuote">
                             <Form.Label>Quote</Form.Label>
                             <Form.Control
@@ -292,81 +302,6 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
                             />
                         </Form.Group>
-                        {/* <Form.Group controlId="formKeyPoints">
-                            <Form.Label>Key Points</Form.Label>
-                            <ol>
-                                {formData?.keyPoints?.map((p, i) => (
-                                    <li key={i}>
-                                        {p}
-                                        <i className='fa fa-times'
-                                            variant="outline-danger"
-                                            size="sm"
-                                            onClick={() => {
-                                                const updatedKeyPoints = formData.keyPoints.filter((_, index) => index !== i);
-                                                setFormData({ ...formData, keyPoints: updatedKeyPoints });
-                                                console.log(updatedKeyPoints)
-                                            }}
-                                            style={{ marginLeft: '10px', cursor: 'pointer', color: 'red' }}
-                                        >
-                                            X
-                                        </i>
-                                    </li>
-                                ))}
-                            </ol>
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    placeholder="Key point"
-                                    aria-label="Key point"
-                                    onChange={(e) => setKeypoint(e.target.value)}
-                                    value={keypoint}
-                                    autoFocus
-                                />
-                                <Button
-                                    onClick={() => {
-                                        setFormData({ ...formData, keyPoints: [...formData.keyPoints, keypoint] });
-                                        setKeypoint('');
-                                        console.log(formData.keyPoints)
-                                    }}
-                                    variant="outline-secondary"
-                                    id="button-addon2"
-                                >
-                                    Add
-                                </Button>
-                            </InputGroup>
-                        </Form.Group> */}
-                        {/* <Form.Group controlId="formKeyInsights">
-                            <Form.Label>Key Insights</Form.Label>
-                            <ol>
-                                {formData?.keyInsights?.map((p, i) => (
-                                    <li key={i}>
-                                        {p}
-                                        <i className='fa fa-times'
-                                            variant="outline-danger"
-                                            size="sm"
-                                            onClick={() => {
-                                                const updatedKeyInsigts = formData.keyInsights.filter((_, index) => index !== i);
-                                                setFormData({ ...formData, keyInsights: updatedKeyInsigts });
-                                            }}
-                                            style={{ marginLeft: '10px', cursor: 'pointer', color: 'red' }}
-                                        >
-                                            X
-                                        </i>
-                                    </li>
-                                ))}
-                            </ol>
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    placeholder="Key Insights"
-                                    aria-label="Key Insight"
-                                    onChange={(e) => setKeyinsight(e.target.value)}
-                                    value={keyinsight}
-                                    autoFocus
-                                />
-                                <Button onClick={() => { setFormData({ ...formData, keyInsights: [...formData.keyInsights, keyinsight] }); setKeyinsight(''); }} variant="outline-secondary" id="button-addon2">
-                                    Add
-                                </Button>
-                            </InputGroup>
-                        </Form.Group> */}
                         <Form.Group controlId="formReadTime">
                             <Form.Label>Read Time</Form.Label>
                             <Form.Control
@@ -376,118 +311,58 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
                             />
                         </Form.Group>
-                        {/* <Form.Group controlId="formAuthorName">
-                            <Form.Label>Author Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter author name"
-                                value={formData.authorName}
-                                onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formAuthorDesignation">
-                            <Form.Label>Author Designation</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter author designation"
-                                value={formData.authorDesignation}
-                                onChange={(e) => setFormData({ ...formData, authorDesignation: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formAuthorAbout">
-                            <Form.Label>About Author</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                placeholder="Enter about author"
-                                value={formData.authorAbout}
-                                onChange={(e) => setFormData({ ...formData, authorAbout: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formFacebook">
-                            <Form.Label>Facebook</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter Facebook link"
-                                value={formData.facebook}
-                                onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formTwitter">
-                            <Form.Label>Twitter</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter Twitter link"
-                                value={formData.twitter}
-                                onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formInstagram">
-                            <Form.Label>Instagram</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter Instagram link"
-                                value={formData.instagram}
-                                onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
-                            />
-                        </Form.Group> */}
-                        <Form.Group controlId="formBlogImage">
-                            <Form.Label>Blog Image1</Form.Label>
+                        <Form.Group controlId="formBlogImage1">
+                            <Form.Label>Blog Image 1</Form.Label>
                             <Form.Control
                                 type="file"
                                 onChange={(e) => setFormData({ ...formData, blogImage: e.target.files[0] })}
                             />
                         </Form.Group>
-                        <Form.Group controlId="formBlogImage">
-                            <Form.Label>Blog Image2</Form.Label>
+                        <Form.Group controlId="formBlogImage2">
+                            <Form.Label>Blog Image 2</Form.Label>
                             <Form.Control
                                 type="file"
                                 onChange={(e) => setFormData({ ...formData, blogImage2: e.target.files[0] })}
                             />
                         </Form.Group>
-                        {/* <Form.Group controlId="formAuthorProfile">
-                            <Form.Label>Author Profile Image</Form.Label>
-                            <Form.Control
-                                type="file"
-                                onChange={(e) => setFormData({ ...formData, authorProfile: e.target.files[0] })}
-                            />
-                        </Form.Group> */}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" disabled={isFetching} onClick={handleSubmit}>
-                        {isFetching ? 'Please wait while we add your blog' : 'Submit'}
+                    <Button variant="primary" onClick={handleSubmit}>
+                        {editMode ? 'Update Blog' : 'Add Blog'}
                     </Button>
                 </Modal.Footer>
             </Modal>
 
-            <Modal show={confirmShow} onHide={() => setconfirmShow(false)}>
+            <Modal show={categoryFormShow} onHide={() => setCategoryFormShow(false)} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete Blog</Modal.Title>
+                    <Modal.Title>Add Category</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Are you sure you want to delete this blog?</p>
-                    <p>Type <strong>{validator}</strong> to confirm your action!</p>
-                    <Form.Control
-                        type="number"
-                        value={verifyKey}
-                        onChange={(e) => setVerifyKey(e.target.value)}
-                    />
+                    <Form.Group controlId="formNewCategory">
+                        <Form.Label>Category Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter category name"
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value)}
+                        />
+                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setconfirmShow(false)}>
+                    <Button variant="secondary" onClick={() => setCategoryFormShow(false)}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => handleDelete()}>
-                        Confirm Delete
+                    <Button variant="primary" disabled={isFetchingCat} onClick={handleAddCategory}>
+                        {isFetchingCat ? 'Please wait while we add category' : 'Add Category'}
                     </Button>
                 </Modal.Footer>
             </Modal>
         </div>
     );
-}
+};
 
 export default Evaluation;
