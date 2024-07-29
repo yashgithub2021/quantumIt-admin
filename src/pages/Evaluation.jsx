@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetEvaluationForm, SetEvaluationForm, UpdateEvaluationForm, DeleteEvaluationForm, GetCategories, AddCategory, DeleteCategory } from '../Redux/ApiCalls';
+import {
+    GetEvaluationForm,
+    SetEvaluationForm,
+    UpdateEvaluationForm,
+    DeleteEvaluationForm,
+    GetCategories,
+    AddCategory,
+    DeleteCategory
+} from '../Redux/ApiCalls';
 import { InputGroup, Card, Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -13,6 +21,7 @@ import { FaEye } from "react-icons/fa";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Import the styles
 import { generateRandomSixDigitNumber } from '../utils/function';
+import CustomPagination from '../components/layout/CustomPagination';
 
 const Evaluation = () => {
     const { isFetching, error, errMsg, evaluationform } = useSelector(state => state.eval);
@@ -30,6 +39,8 @@ const Evaluation = () => {
     const [Id, setId] = useState(null);
     const [categoryFormShow, setCategoryFormShow] = useState(false);
     const [newCategory, setNewCategory] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const transactionsPerPage = 5; // Number of transactions per page
 
     const handleClose = () => {
         setShow(false);
@@ -139,6 +150,7 @@ const Evaluation = () => {
 
     const handleVerify = (id) => {
         setValidator(generateRandomSixDigitNumber());
+        console.log(validator)
         setconfirmShow(true);
         setId(id);
     };
@@ -146,6 +158,7 @@ const Evaluation = () => {
     const handleDelete = async () => {
         if (confirmShow) {
             if (validator === verifyKey) {
+                console.log(validator)
                 await DeleteEvaluationForm(dispatch, Id);
                 setconfirmShow(false);
                 setId(null);
@@ -190,6 +203,13 @@ const Evaluation = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isFetching]);
 
+    const transactionList = evaluationform || [];
+    const indexOfLastTransaction = currentPage * transactionsPerPage;
+    const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
+    const currentTransactions = transactionList.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
+    const pageHandler = (pageNumber) => setCurrentPage(pageNumber);
+
     return (
         <div className='container-fluid'>
             <div className="my-3 pb-2 row" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }} >
@@ -221,9 +241,9 @@ const Evaluation = () => {
                                 <td colSpan="7" className="text-center">Loading...</td>
                             </tr>
                         ) : (
-                            evaluationform?.map((blog, i) => (
+                            currentTransactions?.map((blog, i) => (
                                 <tr key={blog.id}>
-                                    <td>{i + 1}</td>
+                                    <td>{i + 1 + (currentPage - 1) * transactionsPerPage}</td>
                                     <td>{blog.title}</td>
                                     <td>{blog.category}</td>
                                     <td>{blog.readTime}</td>
@@ -248,10 +268,19 @@ const Evaluation = () => {
                         )}
                     </tbody>
                 </Table>
+                {transactionList.length > 0 && (
+                    <CustomPagination
+                        pages={Math.ceil(transactionList.length / transactionsPerPage)}
+                        pageHandler={pageHandler}
+                        curPage={currentPage}
+                    />
+                )}
             </div>
-            <Modal show={show} onHide={handleClose} size="lg" centered>
+
+            {/* Modal for Blog Form */}
+            <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{editMode ? 'Edit Blog' : 'Add Blog'}</Modal.Title>
+                    <Modal.Title>{editMode ? "Edit Blog" : "Add Blog"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -264,28 +293,23 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             />
                         </Form.Group>
+
                         <Form.Group controlId="formCategory">
                             <Form.Label>Category</Form.Label>
-                            <div className="d-flex">
-                                <Form.Control
-                                    as="select"
-                                    value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                >
-                                    <option value="">Select Category</option>
-                                    {Categories?.map((category) => (
-                                        <option key={category.id} value={category.name}>{category.name}</option>
-                                    ))}
-                                </Form.Control>
-                                <Button
-                                    variant="outline-secondary"
-                                    onClick={() => setCategoryFormShow(true)}
-                                    className="ml-2"
-                                >
-                                    Add
-                                </Button>
-                            </div>
+                            <Form.Control
+                                as="select"
+                                value={formData.category}
+                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                            >
+                                <option value="">Select Category</option>
+                                {Categories.map((category) => (
+                                    <option key={category.id} value={category.name}>
+                                        {category.name}
+                                    </option>
+                                ))}
+                            </Form.Control>
                         </Form.Group>
+
                         <Form.Group controlId="formDescription">
                             <Form.Label>Description</Form.Label>
                             <ReactQuill
@@ -293,6 +317,7 @@ const Evaluation = () => {
                                 onChange={handleDescriptionChange}
                             />
                         </Form.Group>
+
                         <Form.Group controlId="formQuote">
                             <Form.Label>Quote</Form.Label>
                             <Form.Control
@@ -302,6 +327,7 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, quote: e.target.value })}
                             />
                         </Form.Group>
+
                         <Form.Group controlId="formReadTime">
                             <Form.Label>Read Time</Form.Label>
                             <Form.Control
@@ -311,13 +337,15 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
                             />
                         </Form.Group>
-                        <Form.Group controlId="formBlogImage1">
+
+                        <Form.Group controlId="formBlogImage">
                             <Form.Label>Blog Image 1</Form.Label>
                             <Form.Control
                                 type="file"
                                 onChange={(e) => setFormData({ ...formData, blogImage: e.target.files[0] })}
                             />
                         </Form.Group>
+
                         <Form.Group controlId="formBlogImage2">
                             <Form.Label>Blog Image 2</Form.Label>
                             <Form.Control
@@ -325,63 +353,59 @@ const Evaluation = () => {
                                 onChange={(e) => setFormData({ ...formData, blogImage2: e.target.files[0] })}
                             />
                         </Form.Group>
+
+                        <Button variant="primary" onClick={handleSubmit}>
+                            {editMode ? "Update Blog" : "Add Blog"}
+                        </Button>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleSubmit}>
-                        {editMode ? 'Update Blog' : 'Add Blog'}
-                    </Button>
-                </Modal.Footer>
             </Modal>
 
-            <Modal show={categoryFormShow} onHide={() => setCategoryFormShow(false)} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Category</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="formNewCategory">
-                        <Form.Label>Category Name</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Enter category name"
-                            value={newCategory}
-                            onChange={(e) => setNewCategory(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setCategoryFormShow(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" disabled={isFetchingCat} onClick={handleAddCategory}>
-                        {isFetchingCat ? 'Please wait while we add category' : 'Add Category'}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {/* Confirmation Modal */}
             <Modal show={confirmShow} onHide={() => setconfirmShow(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete Blog</Modal.Title>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Are you sure you want to delete this blog?</p>
-                    <p>Type <strong>{validator}</strong> to confirm your action!</p>
+                    <p>Please enter the validation key to confirm deletion: <strong>{validator}</strong></p>
                     <Form.Control
                         type="number"
+                        placeholder="Enter key"
                         value={verifyKey}
                         onChange={(e) => setVerifyKey(e.target.value)}
                     />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setconfirmShow(false)}>
-                        Close
+                        Cancel
                     </Button>
-                    <Button variant="primary" onClick={() => handleDelete()}>
-                        Confirm Delete
+                    <Button variant="danger" onClick={handleDelete}>
+                        Confirm
                     </Button>
                 </Modal.Footer>
+            </Modal>
+
+            {/* Category Form Modal */}
+            <Modal show={categoryFormShow} onHide={() => setCategoryFormShow(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add Category</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="formNewCategory">
+                            <Form.Label>Category Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter category name"
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Button variant="primary" onClick={handleAddCategory}>
+                            Add Category
+                        </Button>
+                    </Form>
+                </Modal.Body>
             </Modal>
         </div>
     );

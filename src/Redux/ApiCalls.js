@@ -383,6 +383,10 @@ export const GetEvaluationForm = async (dispatch) => {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+            params: {
+                resultPerPage: 100,
+                currentPage: 1
+            }
         });
         dispatch(getAllEvalSuccess(data));
     } catch (error) {

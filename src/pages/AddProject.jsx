@@ -8,6 +8,7 @@ import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
 import { generateRandomSixDigitNumber } from '../utils/function';
 import { FaEye } from "react-icons/fa";
+import CustomPagination from '../components/layout/CustomPagination';
 
 const Clinic = () => {
     const formDataObj = new FormData();
@@ -25,6 +26,8 @@ const Clinic = () => {
     const [imageTwo, setSecondFile] = useState(null);
     const [thirdFile, setThirdFile] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [currentPage, setCurrentPage] = useState(1);
+    const transactionsPerPage = 5; // Number of transactions per page
 
     const handleFirstFileChange = (event) => {
         setFirstFile(event.target.files[0]);
@@ -160,6 +163,18 @@ const Clinic = () => {
     }, [isFetching]);
 
     const filteredClinics = selectedCategory === 'All' ? clinics : clinics.filter(clinic => clinic.category.includes(selectedCategory));
+    // Check if transactions.transactions is defined before slicing
+    const transactionList = filteredClinics || [];
+    const indexOfLastTransaction = currentPage * transactionsPerPage;
+    const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
+    const currentTransactions = transactionList.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
+    // Handle page change
+    const pageHandler = (pageNumber) => setCurrentPage(pageNumber);
+
+    const setPageNoHandler = () => {
+        setCurrentPage(1)
+    }
     return (
         <div className='container-fluid'>
             <Card>
@@ -191,7 +206,7 @@ const Clinic = () => {
                                 </thead>
                                 <tbody>
                                     {isFetching ? "Loading..." :
-                                        filteredClinics?.map((clinic, i) =>
+                                        currentTransactions?.map((clinic, i) =>
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
                                                 <td>{clinic.name}</td>
@@ -244,6 +259,13 @@ const Clinic = () => {
                                             </tr>)}
                                 </tbody>
                             </Table>
+                            {transactionList.length > 0 && (
+                                <CustomPagination
+                                    pages={Math.ceil(transactionList.length / transactionsPerPage)}
+                                    pageHandler={pageHandler}
+                                    curPage={currentPage}
+                                />
+                            )}
                         </Tab>
                         <Tab eventKey="Web App" title="Web App">
                             <Table striped bordered hover>
@@ -261,7 +283,7 @@ const Clinic = () => {
                                 </thead>
                                 <tbody>
                                     {isFetching ? "Loading..." :
-                                        filteredClinics?.map((clinic, i) =>
+                                        currentTransactions?.map((clinic, i) =>
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
                                                 <td>{clinic.name}</td>
@@ -314,6 +336,13 @@ const Clinic = () => {
                                             </tr>)}
                                 </tbody>
                             </Table>
+                            {transactionList.length > 0 && (
+                                <CustomPagination
+                                    pages={Math.ceil(transactionList.length / transactionsPerPage)}
+                                    pageHandler={pageHandler}
+                                    curPage={currentPage}
+                                />
+                            )}
                         </Tab>
                         <Tab eventKey="Mobile App" title="Mobile App">
                             <Table striped bordered hover>
@@ -331,7 +360,7 @@ const Clinic = () => {
                                 </thead>
                                 <tbody>
                                     {isFetching ? "Loading..." :
-                                        filteredClinics?.map((clinic, i) =>
+                                        currentTransactions?.map((clinic, i) =>
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
                                                 <td>{clinic.name}</td>
@@ -384,6 +413,13 @@ const Clinic = () => {
                                             </tr>)}
                                 </tbody>
                             </Table>
+                            {transactionList.length > 0 && (
+                                <CustomPagination
+                                    pages={Math.ceil(transactionList.length / transactionsPerPage)}
+                                    pageHandler={pageHandler}
+                                    curPage={currentPage}
+                                />
+                            )}
                         </Tab>
                         <Tab eventKey="Digital Marketing" title="Digital Marketing">
                             <Table striped bordered hover>
@@ -401,7 +437,7 @@ const Clinic = () => {
                                 </thead>
                                 <tbody>
                                     {isFetching ? "Loading..." :
-                                        filteredClinics?.map((clinic, i) =>
+                                        currentTransactions?.map((clinic, i) =>
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
                                                 <td>{clinic.name}</td>
@@ -454,6 +490,13 @@ const Clinic = () => {
                                             </tr>)}
                                 </tbody>
                             </Table>
+                            {transactionList.length > 0 && (
+                                <CustomPagination
+                                    pages={Math.ceil(transactionList.length / transactionsPerPage)}
+                                    pageHandler={pageHandler}
+                                    curPage={currentPage}
+                                />
+                            )}
                         </Tab>
                         <Tab eventKey="Website" title="Website">
                             <Table striped bordered hover>
@@ -471,7 +514,7 @@ const Clinic = () => {
                                 </thead>
                                 <tbody>
                                     {isFetching ? "Loading..." :
-                                        filteredClinics?.map((clinic, i) =>
+                                        currentTransactions?.map((clinic, i) =>
                                             <tr key={i}>
                                                 <td>{i + 1}</td>
                                                 <td>{clinic.name}</td>
@@ -523,6 +566,13 @@ const Clinic = () => {
                                                 </td>
                                             </tr>)}
                                 </tbody>
+                                {transactionList.length > 0 && (
+                                    <CustomPagination
+                                        pages={Math.ceil(transactionList.length / transactionsPerPage)}
+                                        pageHandler={pageHandler}
+                                        curPage={currentPage}
+                                    />
+                                )}
                             </Table>
                         </Tab>
                     </Tabs>
