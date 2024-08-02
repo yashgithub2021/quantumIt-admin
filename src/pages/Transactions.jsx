@@ -84,6 +84,8 @@ const Transactions = () => {
                             )}
                         </tbody>
                     </Table>
+                </Card.Body>
+                <Card.Footer>
                     {transactionList.length > 0 && (
                         <CustomPagination
                             pages={Math.ceil(transactionList.length / transactionsPerPage)}
@@ -91,7 +93,7 @@ const Transactions = () => {
                             curPage={currentPage}
                         />
                     )}
-                </Card.Body>
+                </Card.Footer>
             </Card>
         </div>
     );

@@ -205,7 +205,7 @@ const Clinic = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {isFetching ? "Loading..." :
+                                    {isFetching ? <p>Loading...</p> :
                                         currentTransactions?.map((clinic, i) =>
                                             <tr key={i}>
                                                 <td>{i + 1}</td>

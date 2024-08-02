@@ -3,8 +3,8 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import AdminLoginScreen from "./pages/AdminLoginScreen";
 import { AdminProtectedRoute, UnprotectedRoute } from "./routes";
 import { Header, Footer, SideNavBar, NotFound } from "./components";
-import { Dashboard, } from "./pages";
-import { ToastContainer } from 'react-toastify';
+import { Dashboard } from "./pages";
+import { ToastContainer } from "react-toastify";
 import Contributor from "./pages/AddContributor";
 import Prescription from "./pages/Prescription";
 import Evaluation from "./pages/Evaluation";
@@ -15,7 +15,7 @@ import Plans from "./pages/Plans";
 import Profile from "./pages/profile";
 import Transactions from "./pages/Transactions";
 function App() {
-  const { token } = useSelector(state => state.auth);
+  const { token } = useSelector((state) => state.auth);
   const pageLocation = useLocation();
 
   const [isExpanded, setExpandState] = useState(window.innerWidth > 768);
@@ -56,9 +56,7 @@ function App() {
         className={`body-wrapper ${isExpanded ? "mini-body" : "full-body"} 
         ${token ? "" : "m-0"} d-flex flex-column`}
       >
-        {token && (
-          <Header sidebarHandler={sidebarHandler} />
-        )}
+        {token && <Header sidebarHandler={sidebarHandler} />}
 
         <Routes location={pageLocation} key={pageLocation.pathname}>
           <Route
