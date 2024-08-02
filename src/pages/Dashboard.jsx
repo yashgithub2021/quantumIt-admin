@@ -33,8 +33,8 @@ const Dashboard = () => {
 
   return (
     <div className='container-fluid'>
-      <div class="my-3 pb-2 row" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }} >
-        <div class="col-md-6">
+      <div className="my-3 pb-2 row" style={{ borderBottom: "1px solid rgba(0, 0, 0, 0.2)" }} >
+        <div className="col-md-6">
           <h3>Dashboard</h3>
         </div>
 

@@ -222,52 +222,54 @@ const Evaluation = () => {
                     </Button>
                 </div>
             </div>
-            <div className='mb-3 overflow-x-scroll p-2 row w-100 flex justify-content-start align-items-center' style={{ marginLeft: '10px' }}>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Read Time</th>
-                            <th>Image1</th>
-                            <th>Image2</th>
-                            <th colSpan={2}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {isFetching ? (
+            <div className='mb-3 p-2' style={{ marginLeft: '10px' }}>
+                <div className=' overflow-x-scroll row w-100 flex justify-content-start align-items-center' >
+                    <Table striped bordered hover>
+                        <thead>
                             <tr>
-                                <td colSpan="7" className="text-center">Loading...</td>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Read Time</th>
+                                <th>Image1</th>
+                                <th>Image2</th>
+                                <th colSpan={2}>Actions</th>
                             </tr>
-                        ) : (
-                            currentTransactions?.map((blog, i) => (
-                                <tr key={blog.id}>
-                                    <td>{i + 1 + (currentPage - 1) * transactionsPerPage}</td>
-                                    <td>{blog.title}</td>
-                                    <td>{blog.category}</td>
-                                    <td>{blog.readTime}</td>
-                                    <td>
-                                        <img alt='img1' loading='lazy' width={130} height={100} src={blog.image} />
-                                    </td>
-                                    <td>
-                                        <img alt='img2' loading='lazy' width={130} height={100} src={blog.image2} />
-                                    </td>
-                                    <td>
-                                        <button onClick={() => handleEdit(blog)} className='btn btn-primary'>
-                                            <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button onClick={() => handleVerify(blog.id)} className='btn btn-danger'>
-                                            <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
-                                        </button>
-                                    </td>
+                        </thead>
+                        <tbody>
+                            {isFetching ? (
+                                <tr>
+                                    <td colSpan="7" className="text-center">Loading...</td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </Table>
+                            ) : (
+                                currentTransactions?.map((blog, i) => (
+                                    <tr key={blog.id}>
+                                        <td>{i + 1 + (currentPage - 1) * transactionsPerPage}</td>
+                                        <td>{blog.title}</td>
+                                        <td>{blog.category}</td>
+                                        <td>{blog.readTime}</td>
+                                        <td>
+                                            <img alt='img1' loading='lazy' width={130} height={100} src={blog.image} />
+                                        </td>
+                                        <td>
+                                            <img alt='img2' loading='lazy' width={130} height={100} src={blog.image2} />
+                                        </td>
+                                        <td>
+                                            <button onClick={() => handleEdit(blog)} className='btn btn-primary'>
+                                                <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button onClick={() => handleVerify(blog.id)} className='btn btn-danger'>
+                                                <MdDelete style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
                 {transactionList.length > 0 && (
                     <CustomPagination
                         pages={Math.ceil(transactionList.length / transactionsPerPage)}

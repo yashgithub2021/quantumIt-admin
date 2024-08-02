@@ -1,11 +1,21 @@
 import "./SideNavBar.css";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MdCreateNewFolder, MdOutlineFeedback, MdFormatListBulletedAdd, MdLogout, MdDashboard, MdOutlineMiscellaneousServices, MdContentPasteGo, MdOutlineSwipeRight, MdOutlineLocalHospital } from "react-icons/md";
+import {
+  MdCreateNewFolder,
+  MdOutlineFeedback,
+  MdFormatListBulletedAdd,
+  MdLogout,
+  MdDashboard,
+  MdOutlineMiscellaneousServices,
+  MdContentPasteGo,
+  MdOutlineSwipeRight,
+  MdOutlineLocalHospital,
+} from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../Redux/Slices/AuthSlice";
-import logo from "../../logo-white.png"
-import logo2 from "../../web_icon.png"
+import logo from "../../logo-white.png";
+import logo2 from "../../web_icon.png";
 import { FaLaptop } from "react-icons/fa";
 import { GrContact, GrTransaction } from "react-icons/gr";
 import { PiReadCvLogoFill } from "react-icons/pi";
@@ -15,12 +25,12 @@ const linkList = [
   {
     icon: <MdDashboard className="icon-md" />,
     text: "Dashboard",
-    url: "/admin/dashboard"
+    url: "/admin/dashboard",
   },
   {
     icon: <FaLaptop className="icon-md" />,
     text: "Projects",
-    url: "/admin/add-project"
+    url: "/admin/add-project",
   },
   // {
   //   icon: <MdContentPasteGo className="icon-md" />,
@@ -30,7 +40,7 @@ const linkList = [
   {
     icon: <BsPersonVcardFill className="icon-md" />,
     text: "Blogs",
-    url: "/admin/eval-form"
+    url: "/admin/eval-form",
   },
   // {
   //   icon: <MdFormatListBulletedAdd className="icon-md" />,
@@ -40,38 +50,38 @@ const linkList = [
   {
     icon: <GrContact className="icon-md" />,
     text: "Contact us",
-    url: "/admin/slots"
+    url: "/admin/slots",
   },
   {
     icon: <MdOutlineFeedback className="icon-md" />,
     text: "Feedback ",
-    url: "/admin/plans"
+    url: "/admin/plans",
   },
   {
     icon: <GrTransaction className="icon-md" />,
     text: "Transactions ",
-    url: "/admin/transactions"
+    url: "/admin/transactions",
   },
 ];
 
 const active_text = {
   Dashboard: "dashboard",
   Doctors: "add-doctor",
-  'Prescription-Form': "pres-form",
-  'Evaluation-Form': "eval-form",
-  'Slot Management': "slots",
-  'Clinics': "add-clinic",
-  'Service\'s Management': "plans",
+  "Prescription-Form": "pres-form",
+  "Evaluation-Form": "eval-form",
+  "Slot Management": "slots",
+  Clinics: "add-clinic",
+  "Service's Management": "plans",
   Orders: "order",
   Contents: "content",
 };
 
 export default function SideNavbar({ isExpanded }) {
-  const { userInfo } = useSelector(state => state.auth);
+  const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const pathname = window.location.pathname;
   // eslint-disable-next-line no-unused-vars
-  const [activeLink, setActiveLink] = useState('Dashboard');
+  const [activeLink, setActiveLink] = useState("Dashboard");
   // const { state, dispatch: ctxDispatch } = useContext(Store);
   // const { userInfo } = state;
   const navigate = useNavigate();
@@ -84,7 +94,9 @@ export default function SideNavbar({ isExpanded }) {
     return pathname.includes(active_text[text]);
   };
 
-  const cls = `nav-item has-treeview ${isExpanded ? "menu-item" : "menu-item menu-item-NX"}`;
+  const cls = `nav-item has-treeview ${
+    isExpanded ? "menu-item" : "menu-item menu-item-NX"
+  }`;
   return (
     <>
       {userInfo ? (
@@ -96,11 +108,11 @@ export default function SideNavbar({ isExpanded }) {
           }
         >
           <div className="brand-link">
-            {
-              isExpanded
-                ? <img src={logo} alt="" width={"150px"} height="auto" />
-                : <img src={logo2} alt="" width={"50px"} height="auto" />
-            }
+            {isExpanded ? (
+              <img src={logo} alt="" width={"150px"} height="auto" />
+            ) : (
+              <img src={logo2} alt="" width={"50px"} height="auto" />
+            )}
           </div>
 
           <div className="sidebar">
@@ -121,7 +133,7 @@ export default function SideNavbar({ isExpanded }) {
                     />
                   )}
                   <span className="info-text">
-                    Welcome Back
+                    Welcome Back <b>{userInfo.name}</b>
                   </span>
                 </Link>
               </div>
@@ -137,8 +149,9 @@ export default function SideNavbar({ isExpanded }) {
                 {linkList.map(({ icon, text, url }) => (
                   <li
                     key={url}
-                    className={`${cls} ${activeLinkHandler(text) && "active-item"
-                      }`}
+                    className={`${cls} ${
+                      activeLinkHandler(text) && "active-item"
+                    }`}
                     onClick={() => setActiveLink(text)}
                   >
                     <Link to={url} className="nav-link">
