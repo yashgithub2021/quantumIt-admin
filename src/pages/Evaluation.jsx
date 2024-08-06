@@ -137,7 +137,6 @@ const Evaluation = () => {
                 console.log('State after dispatch:', isFetching, error, errMsg);
 
                 if (!isFetching && !error) {
-                    toast.success("Blog Added Successfully", toastOptions);
                     handleClose();
                 }
             }

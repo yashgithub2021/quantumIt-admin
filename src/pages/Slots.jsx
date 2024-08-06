@@ -96,12 +96,14 @@ const Slots = () => {
                                     )}
                                 </tbody>
                             </Table>
+                        </Card.Body>
+                        <Card.Footer>
                             <CustomPagination
                                 pages={Math.ceil(slots.length / itemsPerPage)}
                                 pageHandler={pageHandler}
                                 curPage={currentPage}
                             />
-                        </Card.Body>
+                        </Card.Footer>
                     </Card>
                 </div>
             </Tab>
@@ -143,12 +145,14 @@ const Slots = () => {
                                     )}
                                 </tbody>
                             </Table>
+                        </Card.Body>
+                        <Card.Footer>
                             <CustomPagination
                                 pages={Math.ceil(queriesFetched.length / itemsPerPage)}
                                 pageHandler={pageHandler}
                                 curPage={currentPage}
                             />
-                        </Card.Body>
+                        </Card.Footer>
                     </Card>
                 </div>
             </Tab>
