@@ -9,7 +9,7 @@ import {
     AddCategory,
     DeleteCategory
 } from '../Redux/ApiCalls';
-import { InputGroup, Card, Form } from 'react-bootstrap';
+import { Form, Container, Spinner } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Table } from 'react-bootstrap';
@@ -173,7 +173,8 @@ const Evaluation = () => {
         }
     };
 
-    const handleAddCategory = async () => {
+    const handleAddCategory = async (e) => {
+        e.preventDefault()
         if (!newCategory) {
             toast.error("Please enter a category name", toastOptions);
             return;
@@ -297,18 +298,21 @@ const Evaluation = () => {
 
                         <Form.Group controlId="formCategory">
                             <Form.Label>Category</Form.Label>
-                            <Form.Control
-                                as="select"
-                                value={formData.category}
-                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            >
-                                <option value="">Select Category</option>
-                                {Categories.map((category) => (
-                                    <option key={category.id} value={category.name}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </Form.Control>
+                            <Container className='d-flex justify-content-between gap-2 p-0'>
+                                <Form.Control
+                                    as="select"
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                >
+                                    <option value="">Select Category</option>
+                                    {Categories.map((category) => (
+                                        <option key={category.id} value={category.name}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                                <Button onClick={() => setCategoryFormShow(true)}>Add</Button>
+                            </Container>
                         </Form.Group>
 
                         <Form.Group controlId="formDescription">
@@ -355,9 +359,19 @@ const Evaluation = () => {
                             />
                         </Form.Group>
 
-                        <Button variant="primary" onClick={handleSubmit}>
-                            {editMode ? "Update Blog" : "Add Blog"}
-                        </Button>
+                        <Form.Group className='d-flex justify-content-center'>
+                            <Button className='my-3 d-flex justify-content-center align-items-center gap-1' variant="primary" onClick={handleSubmit}>
+                                {editMode ? "Update Blog" : "Add Blog"}
+                                {isFetching && <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    style={{ opacity: "0.6" }}
+                                />}
+                            </Button>
+                        </Form.Group>
                     </Form>
                 </Modal.Body>
             </Modal>
@@ -380,19 +394,29 @@ const Evaluation = () => {
                     <Button variant="secondary" onClick={() => setconfirmShow(false)}>
                         Cancel
                     </Button>
-                    <Button variant="danger" onClick={handleDelete}>
+                    <Button disabled={isFetching} variant="danger" onClick={handleDelete}>
                         Confirm
+                        {
+                            isFetching && <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                style={{ opacity: "0.6", marginInline: "5px" }}
+                            />
+                        }
                     </Button>
                 </Modal.Footer>
             </Modal>
 
             {/* Category Form Modal */}
-            <Modal show={categoryFormShow} onHide={() => setCategoryFormShow(false)}>
+            <Modal style={{ backgroundColor: "rgba(0, 0, 0, 0.43)" }} show={categoryFormShow} onHide={() => setCategoryFormShow(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add Category</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form className='d-flex flex-column' onSubmit={handleAddCategory}>
                         <Form.Group controlId="formNewCategory">
                             <Form.Label>Category Name</Form.Label>
                             <Form.Control
@@ -402,8 +426,18 @@ const Evaluation = () => {
                                 onChange={(e) => setNewCategory(e.target.value)}
                             />
                         </Form.Group>
-                        <Button variant="primary" onClick={handleAddCategory}>
+                        <Button disabled={isFetchingCat} type="submit" className='my-2 align-self-center' variant="primary" >
                             Add Category
+                            {
+                                isFetchingCat && <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    style={{ opacity: "0.6", marginInline: "5px" }}
+                                />
+                            }
                         </Button>
                     </Form>
                 </Modal.Body>

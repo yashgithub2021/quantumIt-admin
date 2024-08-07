@@ -13,6 +13,7 @@ import { CiEdit } from "react-icons/ci";
 import { generateRandomSixDigitNumber } from '../utils/function';
 import { MdDelete } from 'react-icons/md';
 import { FaEye } from 'react-icons/fa';
+import { Spinner } from 'react-bootstrap'
 
 const Plans = () => {
     const [loading, setLoading] = useState(false);
@@ -37,7 +38,19 @@ const Plans = () => {
         message: '',
         designation: ''
     });
-    const handleClose = () => { setShow(false); setconfirmShow(false); handleGetAll(); }
+    const handleClose = () => {
+        setFormData({
+            name: '',
+            stars: 0,
+            message: '',
+            designation: ''
+        })
+        setFirstFile(null)
+        setShow(false);
+        setconfirmShow(false);
+        handleGetAll();
+        setIsEdit(false);
+    }
     const handleShow = () => setShow(true);
     const { isFetching, error, plans } = useSelector(state => state.plan);
     const handleGetAll = async () => {
@@ -214,7 +227,16 @@ const Plans = () => {
                         Close
                     </Button>
                     <Button disabled={loading} variant="primary" onClick={handleSubmit}>
-                        {loading ? 'Please wait...' : 'Submit'}
+                        {loading ? <>
+                            Please wait...<Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                style={{ opacity: "0.6", marginInline: "5px" }}
+                            />
+                        </> : 'Submit'}
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -237,8 +259,18 @@ const Plans = () => {
                         <Button variant="secondary" onClick={() => setconfirmShow(false)}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={() => handleDelete()}>
+                        <Button disabled={isFetching} variant="primary" onClick={() => handleDelete()}>
                             Save Changes
+                            {
+                                isFetching && <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                    style={{ opacity: "0.6", marginInline: "5px" }}
+                                />
+                            }
                         </Button>
                     </Modal.Footer>
                 </Form>
