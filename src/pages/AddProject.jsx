@@ -156,7 +156,7 @@ const Clinic = () => {
 
     React.useEffect(() => {
         if (!isFetching && error) {
-            toast.error(errMsg?.message, toastOptions);
+            toast.error(errMsg, toastOptions);
             handleClose();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -764,7 +764,7 @@ const Clinic = () => {
                     <Modal.Title>Do you really want it.</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form onSubmit={(e) => e.preventDefault()}>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Type <strong>{validator}</strong> to confirm your action!</Form.Label>
                             <Form.Control

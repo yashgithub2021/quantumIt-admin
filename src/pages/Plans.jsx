@@ -6,12 +6,11 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/error";
-import { AddPlan, GetAllPlans, UpdatePlan, RemovePlan } from '../Redux/ApiCalls';
+import { AddPlan, GetAllPlans, UpdatePlan, RemovePlan, CreatePlan } from '../Redux/ApiCalls';
 import { useDispatch, useSelector } from 'react-redux';
 import { AiOutlineDelete } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { generateRandomSixDigitNumber } from '../utils/function';
-import axiosInstance from '../utils/axiosUtil';
 import { MdDelete } from 'react-icons/md';
 import { FaEye } from 'react-icons/fa';
 
@@ -70,12 +69,13 @@ const Plans = () => {
         if (isEdit) {
             await UpdatePlan(dispatch, formDataObj, updateToId);
         } else {
-            const { data } = await axiosInstance.post("/api/feedback/feedback", formDataObj, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                }
-            });
-            console.log(data);
+            // const { data } = await axiosInstance.post("/api/feedback/feedback", formDataObj, {
+            //     headers: {
+            //         Authorization: `Bearer ${localStorage.getItem('token')}`,
+            //     }
+            // });
+            // console.log(data);
+            await CreatePlan(dispatch, formDataObj);
         }
 
         setLoading(false);
@@ -219,11 +219,11 @@ const Plans = () => {
                 </Modal.Footer>
             </Modal>
             <Modal show={confirmShow} onHide={() => setconfirmShow(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Do you really want it.</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
+                <Form onSubmit={(e) => e.preventDefault()}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Do you really want it.</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Type <strong>{validator}</strong> to confirm your action!</Form.Label>
                             <Form.Control
@@ -232,16 +232,16 @@ const Plans = () => {
                                 onChange={(e) => setVerifyKey(e.target.value)}
                             />
                         </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setconfirmShow(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={() => handleDelete()}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setconfirmShow(false)}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={() => handleDelete()}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Form>
             </Modal>
         </div>
     );
