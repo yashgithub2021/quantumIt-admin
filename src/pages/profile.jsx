@@ -106,6 +106,7 @@ const Profile = () => {
                             handleChange={handleChange}
                             handleSubmit={handleSubmit}
                             formData={formData}
+                            isFetching={isFetching}
                         />
                     </>
                 )}

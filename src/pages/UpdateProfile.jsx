@@ -1,7 +1,7 @@
 import React from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 
-const UpdateProfileModal = ({ show, onHide, handleChange, handleSubmit, formData }) => {
+const UpdateProfileModal = ({ isFetching, show, onHide, handleChange, handleSubmit, formData }) => {
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton>
@@ -29,6 +29,16 @@ const UpdateProfileModal = ({ show, onHide, handleChange, handleSubmit, formData
                     </Form.Group>
                     <Button variant="primary" type="submit" className="mt-3">
                         Save Changes
+                        {
+                            isFetching && <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                style={{ opacity: "0.6", marginInline: "5px" }}
+                            />
+                        }
                     </Button>
                 </Form>
             </Modal.Body>

@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toastOptions } from "../../utils/error";
+import { toast } from "react-toastify";
 
 const Categorieslice = createSlice({
   name: "Categories",
@@ -31,11 +33,13 @@ const Categorieslice = createSlice({
       state.error = false;
       state.Categories.push(action.payload.category);
       state.isFetchingCat = false;
+      toast.success("Category Added Successfuly", toastOptions);
     },
     addCategoriesFailure: (state, action) => {
       state.errMsg = action.payload;
       state.isFetchingCat = false;
       state.error = true;
+      toast.error(state.errMsg, toastOptions);
     },
     deleteCategoriestart: (state) => {
       state.isFetchingCat = true;

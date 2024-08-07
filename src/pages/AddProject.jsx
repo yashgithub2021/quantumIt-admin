@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InputGroup, Card, Button, Modal, Table, Form, Tabs, Tab } from 'react-bootstrap';
+import { InputGroup, Card, Button, Modal, Table, Form, Tabs, Tab, Spinner } from 'react-bootstrap';
 import { toast } from "react-toastify";
 import { toastOptions } from "../utils/error";
 import { GetAllClinics, CreateProject, RemoveProject, EditProject } from '../Redux/ApiCalls';
@@ -12,7 +12,6 @@ import CustomPagination from '../components/layout/CustomPagination';
 
 const Clinic = () => {
     const formDataObj = new FormData();
-    const dispatch = useDispatch();
     const [confirmShow, setConfirmShow] = useState();
     const [show, setShow] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
@@ -28,17 +27,6 @@ const Clinic = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
     const transactionsPerPage = 5; // Number of transactions per page
-
-    const handleFirstFileChange = (event) => {
-        setFirstFile(event.target.files[0]);
-    };
-    const handleSecondFileChange = (event) => {
-        setSecondFile(event.target.files[0]);
-    };
-    const handleThirdFileChange = (event) => {
-        setThirdFile(event.target.files[0]);
-    };
-
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -53,6 +41,21 @@ const Clinic = () => {
         keyInsights: [],
         aboutProject: ''
     });
+
+    const dispatch = useDispatch();
+    const { isFetching, error, clinics, errMsg } = useSelector(state => state.clinic);
+    const { isFetching: isDeleting } = useSelector(state => state.project)
+
+    const handleFirstFileChange = (event) => {
+        setFirstFile(event.target.files[0]);
+    };
+    const handleSecondFileChange = (event) => {
+        setSecondFile(event.target.files[0]);
+    };
+    const handleThirdFileChange = (event) => {
+        setThirdFile(event.target.files[0]);
+    };
+
 
     const handleClose = () => {
         setFormData({
@@ -76,7 +79,6 @@ const Clinic = () => {
         console.log(isEdit)
         setShow(true)
     };
-    const { isFetching, error, clinics, errMsg } = useSelector(state => state.clinic);
 
     const handleGetAll = async () => {
         await GetAllClinics(dispatch);
@@ -755,7 +757,15 @@ const Clinic = () => {
                         Close
                     </Button>
                     <Button variant="primary" disabled={isFetching} onClick={handleSubmit}>
-                        {isFetching ? 'Please wait while we add your project' : 'Submit'}
+                        Submit
+                        {isFetching && <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            style={{ opacity: "0.6", marginInline: "5px" }}
+                        />}
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -779,8 +789,18 @@ const Clinic = () => {
                     <Button variant="secondary" onClick={() => setConfirmShow(false)}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => handleDelete()}>
+                    <Button disabled={isDeleting} variant="primary" onClick={() => handleDelete()}>
                         Save Changes
+                        {
+                            isDeleting && <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                style={{ opacity: "0.6", marginInline: "5px" }}
+                            />
+                        }
                     </Button>
                 </Modal.Footer>
             </Modal>
