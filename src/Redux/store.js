@@ -8,17 +8,19 @@ import SlotSlice from "./Slices/SlotSlice";
 import PlanSlice from "./Slices/PlanSlice";
 import TransactionSlice from "./Slices/TransactionSlice";
 import CategorySlice from "./Slices/CategorySlice";
+import ProjectSlice from "./Slices/ProjectSlice";
 
 export default configureStore({
-    reducer: {
-        auth: AuthSlice,
-        doc: DoctorSlice,
-        pres: PresSlice,
-        eval: EvalSlice,
-        clinic: ClinicSlice,
-        slot: SlotSlice,
-        plan: PlanSlice,
-        transactions: TransactionSlice,
-        categories: CategorySlice
-    }
-})
+  reducer: {
+    auth: AuthSlice,
+    doc: DoctorSlice,
+    pres: PresSlice,
+    eval: EvalSlice,
+    clinic: ClinicSlice,
+    slot: SlotSlice,
+    plan: PlanSlice,
+    transactions: TransactionSlice,
+    categories: CategorySlice,
+    project: ProjectSlice,
+  },
+});
