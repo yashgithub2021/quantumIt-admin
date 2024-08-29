@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'react-bootstrap';
-import { GetPrescriptionForm, CreateFaq, RemoveFaq } from '../Redux/ApiCalls';
+import { GetPrescriptionForm, CreateFaq, RemoveFaq, UpdateFaq } from '../Redux/ApiCalls';
 import { Form, InputGroup } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -12,11 +12,17 @@ import { CiEdit } from 'react-icons/ci';
 import { MdDelete } from 'react-icons/md';
 import axiosInstance from '../utils/axiosUtil';
 import { generateRandomSixDigitNumber } from '../utils/function';
+import { EditForm, ViewButton } from '../components';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Prescription = () => {
-    const { isFetching, error, errMsg, prescriptionform } = useSelector(state => state.pres);
+    const { isFetching, error, errMsg, prescriptionform, isSuccess } = useSelector(state => state.pres);
+    console.log(prescriptionform)
     const dispatch = useDispatch();
     const [show, setShow] = useState(false);
+    const [modalShow, setModalShow] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [Id, setId] = useState(null);
@@ -28,12 +34,39 @@ const Prescription = () => {
     const [keyinsight, setKeyinsight] = useState('');
     const [formData, setFormData] = useState({
         question: "",
-        description: "",
-        clientName: "",
-        keyPoints: [],
-        keyInsights: [],
+        // description: "",
+        // clientName: "",
+        // keyPoints: [],
+        // keyInsights: [],
         answer: "",
     });
+    const [info, setinfo] = useState({
+        question: "",
+        answer: ""
+    })
+    const inputFieldProps = [
+        {
+            type: "text",
+            col: 12,
+            props: {
+                name: "question",
+                label: "Question",
+                required: true,
+                placeholder: "Enter Question",
+            },
+        },
+        {
+            type: "text",
+            col: 12,
+            row: 12,
+            props: {
+                name: "answer",
+                label: "Answer",
+                required: true,
+                placeholder: "Enter Answer",
+            },
+        },
+    ]
     const handleFetchForm = async () => {
         await GetPrescriptionForm(dispatch);
     }
@@ -47,6 +80,21 @@ const Prescription = () => {
             toast.success("Form Added Successfully", toastOptions);
             handleClose();
         }
+    }
+    const editSubmitHandle = async (e) => {
+        e.preventDefault()
+        console.log(info, Id)
+        await UpdateFaq(dispatch, Id, info)
+        setTimeout(() => {
+            handleFetchForm();
+        }, 1000);
+    }
+    const handleEdit = (i) => {
+        setModalShow(true)
+        setinfo({
+            question: prescriptionform[i].question,
+            answer: prescriptionform[i].answer
+        })
     }
     useEffect(() => {
         handleFetchForm();
@@ -111,11 +159,12 @@ const Prescription = () => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Client Name</th>
+                                {/* <th>Client Name</th> */}
                                 {/* <th>Description</th> */}
-                                <th>Key Insights</th>
-                                <th>Key Points</th>
+                                {/* <th>Key Insights</th> */}
+                                {/* <th>Key Points</th> */}
                                 <th>Question</th>
+                                <th>Answer</th>
                                 <th colSpan={2}>Actions</th>
                             </tr>
                         </thead>
@@ -124,9 +173,9 @@ const Prescription = () => {
                                 prescriptionform?.map((plan, i) =>
                                     <tr key={i}>
                                         <td>{i + 1}</td>
-                                        <td>{plan.clientName}</td>
+                                        {/* <td>{plan.clientName}</td> */}
                                         {/* <td>{plan.description}</td> */}
-                                        <td>
+                                        {/* <td>
                                             <ul>
                                                 {plan.keyPoints.map((key, i) => (
                                                     <li key={i}>
@@ -134,8 +183,8 @@ const Prescription = () => {
                                                     </li>
                                                 ))}
                                             </ul>
-                                        </td>
-                                        <td>
+                                        </td> */}
+                                        {/* <td>
                                             <ul>
                                                 {plan.keyInsights.map((key, i) => (
                                                     <li key={i}>
@@ -143,15 +192,18 @@ const Prescription = () => {
                                                     </li>
                                                 ))}
                                             </ul>
-                                        </td>
+                                        </td> */}
                                         <td>
                                             {plan.question}
                                         </td>
                                         <td>
-                                            <CiEdit style={{ color: 'green', fontSize: '30px' }} />
+                                            {plan.answer}
                                         </td>
                                         <td>
-                                            <MdDelete onClick={() => handleDelete(plan._id)} style={{ color: 'red', fontSize: '30px' }} />
+                                            <CiEdit onClick={() => { setId(plan.id); handleEdit(i) }} />
+                                        </td>
+                                        <td>
+                                            <MdDelete onClick={() => handleDelete(plan.id)} style={{ color: 'red', fontSize: '30px' }} />
                                         </td>
                                     </tr>)}
                         </tbody>
@@ -166,7 +218,7 @@ const Prescription = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form autoComplete='false'>
-                        <Form.Group className="mb-3" controlId="doctor.ControlInput1">
+                        {/* <Form.Group className="mb-3" controlId="doctor.ControlInput1">
                             <Form.Label>Client name</Form.Label>
                             <Form.Control
                                 type="text"
@@ -218,7 +270,7 @@ const Prescription = () => {
                                     Add
                                 </Button>
                             </InputGroup>
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group className="mb-3" controlId="doctor.ControlInput1">
                             <Form.Label>Question</Form.Label>
                             <Form.Control
@@ -228,7 +280,7 @@ const Prescription = () => {
                                 autoFocus
                             />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="doctor.ControlInput1">
+                        {/* <Form.Group className="mb-3" controlId="doctor.ControlInput1">
                             <Form.Label>Description</Form.Label>
                             <Form.Control
                                 type="textarea"
@@ -236,7 +288,7 @@ const Prescription = () => {
                                 value={formData.description}
                                 autoFocus
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group className="mb-3" controlId="doctor.ControlInput1">
                             <Form.Label>Answer</Form.Label>
                             <Form.Control
@@ -282,6 +334,19 @@ const Prescription = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <EditForm title='Edit FAQ'
+                data={info}
+                setData={setinfo}
+                inputFieldProps={inputFieldProps}
+                submitHandler={editSubmitHandle}
+                successMessage='FAQ Updated Successfuly!'
+                show={modalShow}
+                reducerProps={{
+                    loadingUpdate: isFetching, success: isSuccess, errMsg
+                }}
+                onHide={() => setModalShow(false)}
+            />
+
         </div>
     )
 }

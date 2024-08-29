@@ -29,6 +29,9 @@ import {
   removeFaqStart,
   removeFaqSuccess,
   removeFaqFailure,
+  updateFaqStart,
+  updateFaqSuccess,
+  updateFaqFailure,
 } from "./Slices/PresSlice";
 
 import {
@@ -229,6 +232,24 @@ export const RemoveFaq = async (dispatch, formdata) => {
     dispatch(removeFaqSuccess(data));
   } catch (error) {
     dispatch(removeFaqFailure(error?.response?.data?.error));
+  }
+};
+
+export const UpdateFaq = async (dispatch, id, formdata) => {
+  dispatch(updateFaqStart());
+  try {
+    const { data } = await axiosInstance.put("/api/faq/faq", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formdata,
+      params: {
+        id: id,
+      },
+    });
+    dispatch(updateFaqSuccess(data));
+  } catch (error) {
+    dispatch(updateFaqFailure(error?.response?.data?.error));
   }
 };
 
