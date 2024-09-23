@@ -113,6 +113,14 @@ import {
   getAllCategoriesStart,
   getAllCategoriesSuccess,
 } from "./Slices/CategorySlice";
+import {
+  deleteRealEstateFailure,
+  deleteRealEstateStart,
+  deleteRealEstateSuccess,
+  getRealEstateFailure,
+  getRealEstateStart,
+  getRealEstateSuccess,
+} from "./Slices/RealEstateSlice";
 const token = localStorage.getItem("token");
 
 export const getTransactions = async (dispatch) => {
@@ -300,6 +308,40 @@ export const GetAllSlots = async (dispatch) => {
   }
 };
 
+export const getRealEstateData = async (dispatch) => {
+  dispatch(getRealEstateStart());
+  try {
+    const { data } = await axiosInstance.get("/api/real-estates/real-estate", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(data);
+    dispatch(getRealEstateSuccess(data));
+  } catch (error) {
+    // console.log(error);
+    dispatch(getRealEstateFailure(error?.response?.data?.error));
+  }
+};
+
+export const deleteReatEstateQuery = async (dispatch, id) => {
+  dispatch(deleteRealEstateStart());
+  try {
+    const { data } = await axiosInstance.delete(
+      `/api/real-estates/real-estate?id=${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(data);
+    dispatch(deleteRealEstateSuccess(data));
+  } catch (error) {
+    // console.log(error);
+    dispatch(deleteRealEstateFailure(error?.response?.data?.error));
+  }
+};
 export const GetAllPlans = async (dispatch) => {
   dispatch(getAllPlanStart());
   try {

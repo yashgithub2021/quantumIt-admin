@@ -23,14 +23,14 @@ export default function CustomTable(props) {
   const { setResultPerPage } = rowProps;
   const { numOfPages, curPage } = pageProps;
   let searchInput, setSearchInput, setQuery;
-  if(search) {
+  if (search) {
     searchInput = searchProps.searchInput;
     setSearchInput = searchProps.setSearchInput;
     setQuery = searchProps.setQuery;
   }
 
   let createURL, text;
-  if(isCreateBtn) {
+  if (isCreateBtn) {
     createURL = createBtnProps.createURL;
     text = createBtnProps.text;
   }
@@ -39,35 +39,39 @@ export default function CustomTable(props) {
   return (
     <Card>
       <Card.Header>
-        {isCreateBtn && createURL && <Button
-          onClick={() => {
-            navigate(createURL);
-          }}
-          type="success"
-          className="btn btn-primary btn-block mt-1"
-        >
-          Add {text && text}
-        </Button>}
-        {search && <div className="search-box float-end">
-          <InputGroup>
-            <Form.Control
-              aria-label="Search Input"
-              placeholder="Search"
-              type="search"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <InputGroup.Text
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                setQuery(searchInput);
-                pageHandler(1);
-              }}
-            >
-              <FaSearch />
-            </InputGroup.Text>
-          </InputGroup>
-        </div>}
+        {isCreateBtn && createURL && (
+          <Button
+            onClick={() => {
+              navigate(createURL);
+            }}
+            type="success"
+            className="btn btn-primary btn-block mt-1"
+          >
+            Add {text && text}
+          </Button>
+        )}
+        {search && (
+          <div className="search-box float-end">
+            <InputGroup>
+              <Form.Control
+                aria-label="Search Input"
+                placeholder="Search"
+                type="search"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+              <InputGroup.Text
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setQuery(searchInput);
+                  pageHandler(1);
+                }}
+              >
+                <FaSearch />
+              </InputGroup.Text>
+            </InputGroup>
+          </div>
+        )}
       </Card.Header>
       <Card.Body>
         <Table responsive striped bordered hover>
@@ -90,6 +94,7 @@ export default function CustomTable(props) {
             <Form.Select
               value={resultPerPage}
               onChange={(e) => {
+                console.log(e.target.value);
                 setResultPerPage(e.target.value);
                 pageHandler(1);
               }}

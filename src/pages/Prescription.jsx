@@ -75,6 +75,10 @@ const Prescription = () => {
         await CreateFaq(dispatch, formData);
         setTimeout(() => {
             handleFetchForm();
+            setFormData({
+                question: "",
+                answer: "",
+            })
         }, 1000);
         if (!isFetching && !error) {
             toast.success("Form Added Successfully", toastOptions);
