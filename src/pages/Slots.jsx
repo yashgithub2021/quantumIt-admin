@@ -7,6 +7,8 @@ import { GetAllSlots } from '../Redux/ApiCalls';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosInstance from '../utils/axiosUtil';
 import CustomPagination from '../components/layout/CustomPagination';
+import RealEstateTab from './RealEstateTab';
+
 
 const Slots = () => {
     const dispatch = useDispatch();
@@ -37,6 +39,7 @@ const Slots = () => {
         });
         setQueriesFetched(data.queries);
     };
+
 
     const pageHandler = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -155,6 +158,9 @@ const Slots = () => {
                         </Card.Footer>
                     </Card>
                 </div>
+            </Tab>
+            <Tab eventKey="real_estate_queries" title="Real Estate Queries">
+                <RealEstateTab />
             </Tab>
         </Tabs>
     );

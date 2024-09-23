@@ -9,6 +9,7 @@ import PlanSlice from "./Slices/PlanSlice";
 import TransactionSlice from "./Slices/TransactionSlice";
 import CategorySlice from "./Slices/CategorySlice";
 import ProjectSlice from "./Slices/ProjectSlice";
+import RealEstateSlice from "./Slices/RealEstateSlice";
 
 export default configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export default configureStore({
     transactions: TransactionSlice,
     categories: CategorySlice,
     project: ProjectSlice,
+    realEstate: RealEstateSlice,
   },
 });

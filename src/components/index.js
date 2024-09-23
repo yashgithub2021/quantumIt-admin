@@ -13,7 +13,8 @@ import {
   SideNavBar,
   MotionDiv,
   SubmitButton,
-  Code
+  Code,
+  EditForm,
 } from "./layout";
 
 export {
@@ -31,5 +32,6 @@ export {
   SideNavBar,
   MotionDiv,
   SubmitButton,
-  Code
+  Code,
+  EditForm,
 };
