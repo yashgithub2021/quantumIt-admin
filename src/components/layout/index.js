@@ -11,6 +11,7 @@ import SideNavBar from "./SideNavBar";
 import MotionDiv from "./MotionDiv";
 import SubmitButton from "./SubmitButton";
 import Code from "./Code";
+import { EditForm } from "./CustomForm";
 
 export {
   useTitle,
@@ -28,4 +29,5 @@ export {
   MotionDiv,
   SubmitButton,
   Code,
+  EditForm,
 };
