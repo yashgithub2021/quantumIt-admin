@@ -56,6 +56,9 @@ const Evaluation = () => {
         description: '',
         quote: '',
         readTime: '',
+        custom_url: '',
+        meta_title: '',
+        meta_desc: '',
         blogImage: null,
         blogImage2: null,
     });
@@ -67,6 +70,9 @@ const Evaluation = () => {
             description: '',
             quote: '',
             readTime: '',
+            custom_url: '',
+            meta_title: '',
+            meta_desc: '',
             blogImage: null,
             blogImage2: null,
         });
@@ -94,6 +100,9 @@ const Evaluation = () => {
             description: blog.description,
             quote: blog.quote,
             readTime: blog.readTime,
+            custom_url: blog.custom_url,
+            meta_title: blog.meta_title,
+            meta_desc: blog.meta_desc,
         });
         handleShow();
     };
@@ -336,6 +345,36 @@ const Evaluation = () => {
                                 placeholder="Enter read time"
                                 value={formData.readTime}
                                 onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formReadTime">
+                            <Form.Label>Custom URL Slug</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter Custom URL"
+                                value={formData.custom_url}
+                                onChange={(e) => setFormData({ ...formData, custom_url: e.target.value })}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formReadTime">
+                            <Form.Label>Custom Meta Title</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter Meta Title"
+                                value={formData.meta_title}
+                                onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formReadTime">
+                            <Form.Label>Custom Meta Desription</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter Meta Desription"
+                                value={formData.meta_desc}
+                                onChange={(e) => setFormData({ ...formData, meta_desc: e.target.value })}
                             />
                         </Form.Group>
 
