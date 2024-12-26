@@ -445,7 +445,7 @@ export const GetEvaluationForm = async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
       params: {
-        resultPerPage: 100,
+        resultPerPage: 500,
         currentPage: 1,
       },
     });
