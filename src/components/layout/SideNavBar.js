@@ -32,11 +32,11 @@ const linkList = [
     text: "Projects",
     url: "/admin/add-project",
   },
-  // {
-  //   icon: <MdContentPasteGo className="icon-md" />,
-  //   text: "F.A.Q.",
-  //   url: "/admin/pres-form"
-  // },
+  {
+    icon: <MdContentPasteGo className="icon-md" />,
+    text: "F.A.Q.",
+    url: "/admin/pres-form",
+  },
   {
     icon: <BsPersonVcardFill className="icon-md" />,
     text: "Blogs",

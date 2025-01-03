@@ -29,6 +29,9 @@ import {
   removeFaqStart,
   removeFaqSuccess,
   removeFaqFailure,
+  updateFaqStart,
+  updateFaqSuccess,
+  updateFaqFailure,
 } from "./Slices/PresSlice";
 
 import {
@@ -110,6 +113,14 @@ import {
   getAllCategoriesStart,
   getAllCategoriesSuccess,
 } from "./Slices/CategorySlice";
+import {
+  deleteRealEstateFailure,
+  deleteRealEstateStart,
+  deleteRealEstateSuccess,
+  getRealEstateFailure,
+  getRealEstateStart,
+  getRealEstateSuccess,
+} from "./Slices/RealEstateSlice";
 const token = localStorage.getItem("token");
 
 export const getTransactions = async (dispatch) => {
@@ -232,6 +243,24 @@ export const RemoveFaq = async (dispatch, formdata) => {
   }
 };
 
+export const UpdateFaq = async (dispatch, id, formdata) => {
+  dispatch(updateFaqStart());
+  try {
+    const { data } = await axiosInstance.put("/api/faq/faq", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formdata,
+      params: {
+        id: id,
+      },
+    });
+    dispatch(updateFaqSuccess(data));
+  } catch (error) {
+    dispatch(updateFaqFailure(error?.response?.data?.error));
+  }
+};
+
 export const GetAllClinics = async (dispatch) => {
   dispatch(getAllClinicsStart());
   try {
@@ -279,6 +308,40 @@ export const GetAllSlots = async (dispatch) => {
   }
 };
 
+export const getRealEstateData = async (dispatch) => {
+  dispatch(getRealEstateStart());
+  try {
+    const { data } = await axiosInstance.get("/api/real-estates/real-estate", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(data);
+    dispatch(getRealEstateSuccess(data));
+  } catch (error) {
+    // console.log(error);
+    dispatch(getRealEstateFailure(error?.response?.data?.error));
+  }
+};
+
+export const deleteReatEstateQuery = async (dispatch, id) => {
+  dispatch(deleteRealEstateStart());
+  try {
+    const { data } = await axiosInstance.delete(
+      `/api/real-estates/real-estate?id=${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(data);
+    dispatch(deleteRealEstateSuccess(data));
+  } catch (error) {
+    // console.log(error);
+    dispatch(deleteRealEstateFailure(error?.response?.data?.error));
+  }
+};
 export const GetAllPlans = async (dispatch) => {
   dispatch(getAllPlanStart());
   try {
