@@ -36,6 +36,7 @@ const Clinic = () => {
         image: '',
         imageTwo: '',
         liveLink: '',
+        iosLink: '',
         category: [],
         keyPoints: [],
         keyInsights: [],
@@ -67,6 +68,7 @@ const Clinic = () => {
             image: '',
             imageTwo: '',
             liveLink: '',
+            iosLink: '',
             category: [],
             keyPoints: [],
             keyInsights: [],
@@ -244,6 +246,7 @@ const Clinic = () => {
                                                             image: clinic.image,
                                                             imageTwo: clinic.imageTwo,
                                                             liveLink: clinic.liveLink,
+                                                            iosLink: clinic.iosLink,
                                                             category: clinic.category,
                                                             keyPoints: clinic.keyPoints,
                                                             keyInsights: clinic.keyInsights,
@@ -321,6 +324,7 @@ const Clinic = () => {
                                                             image: clinic.image,
                                                             imageTwo: clinic.imageTwo,
                                                             liveLink: clinic.liveLink,
+                                                            iosLink: clinic.iosLink,
                                                             category: clinic.category,
                                                             keyPoints: clinic.keyPoints,
                                                             keyInsights: clinic.keyInsights,
@@ -398,6 +402,7 @@ const Clinic = () => {
                                                             image: clinic.image,
                                                             imageTwo: clinic.imageTwo,
                                                             liveLink: clinic.liveLink,
+                                                            iosLink: clinic.iosLink,
                                                             category: clinic.category,
                                                             keyPoints: clinic.keyPoints,
                                                             keyInsights: clinic.keyInsights,
@@ -475,6 +480,7 @@ const Clinic = () => {
                                                             image: clinic.image,
                                                             imageTwo: clinic.imageTwo,
                                                             liveLink: clinic.liveLink,
+                                                            iosLink: clinic.iosLink,
                                                             category: clinic.category,
                                                             keyPoints: clinic.keyPoints,
                                                             keyInsights: clinic.keyInsights,
@@ -552,6 +558,7 @@ const Clinic = () => {
                                                             image: clinic.image,
                                                             imageTwo: clinic.imageTwo,
                                                             liveLink: clinic.liveLink,
+                                                            iosLink: clinic.iosLink,
                                                             category: clinic.category,
                                                             keyPoints: clinic.keyPoints,
                                                             keyInsights: clinic.keyInsights,
@@ -639,6 +646,15 @@ const Clinic = () => {
                                 type="text"
                                 onChange={(e) => setFormData({ ...formData, liveLink: e.target.value })}
                                 value={formData.liveLink}
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="doctor.ControlInput2">
+                            <Form.Label>iOS Link</Form.Label>
+                            <Form.Control
+                                type="text"
+                                onChange={(e) => setFormData({ ...formData, iosLink: e.target.value })}
+                                value={formData.iosLink}
                                 autoFocus
                             />
                         </Form.Group>
