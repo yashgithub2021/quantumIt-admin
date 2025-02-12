@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   GetEvaluationForm,
@@ -22,7 +22,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import the styles
 import { generateRandomSixDigitNumber } from "../utils/function";
 import CustomPagination from "../components/layout/CustomPagination";
-
+import axiosInstance from "../utils/axiosUtil";
 const Evaluation = () => {
   const { isFetching, error, errMsg, evaluationform } = useSelector(
     (state) => state.eval
@@ -44,6 +44,7 @@ const Evaluation = () => {
   const [categoryFormShow, setCategoryFormShow] = useState(false);
   const [newCategory, setNewCategory] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  
   const transactionsPerPage = 5; // Number of transactions per page
 
   const handleClose = () => {
@@ -66,7 +67,11 @@ const Evaluation = () => {
     blogImage: null,
     blogImage2: null,
   });
-
+  console.log(formData,'formData');
+  const quillRef = useRef(null); // Ref for Quill instance
+  
+  
+  
   const resetForm = () => {
     setFormData({
       title: "",
@@ -226,24 +231,142 @@ const Evaluation = () => {
 
   const pageHandler = (pageNumber) => setCurrentPage(pageNumber);
 
-  const modules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, false] }, { font: [] }],
-        [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-          { list: "ordered" },
-          { list: "bullet" },
-          { indent: "-1" },
-          { indent: "+1" },
-        ],
-        ["link", "image"], // Include image option in toolbar
-        ["clean"],
-      ],
-    },
-  };
+  
 
+  // const uploadImageToServer = async (file) => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+
+  //     const response = await axiosInstance.post("/api/blogs/upload-image", formData, {
+  //       headers: { "Content-Type": "multipart/form-data" },
+  //     });
+
+  //     return response.data.imageUrl;
+  //   } catch (error) {
+  //     console.error("Image upload failed:", error);
+  //     return null;
+  //   } }
+    //   description image handler 
+    // const imageHandler = () => {
+    //   const input = document.createElement("input");
+    //   input.setAttribute("type", "file");
+    //   input.setAttribute("accept", "image/*");
+    //   input.click();
+    
+    //   input.onchange = async () => {
+    //     const file = input.files[0];
+    //     if (!file) return;
+    
+    //     const imageUrl = await uploadImageToServer(file).catch((error) => {
+    //       console.error("Failed to upload image:", error);
+    //       return null;
+    //     });
+    //     if (!imageUrl) return;
+    
+    //     setTimeout(() => {
+    //       const quillInstance = quillRef.current?.getEditor();
+    //       if (!quillRef.current || !quillInstance) {
+    //         console.error("Quill editor is not initialized yet.");
+    //         return;
+    //       }
+    
+    //       let range = quillInstance.getSelection();
+    //       if (!range) {
+    //         console.warn("Invalid selection, moving to the end...");
+    //         range = { index: quillInstance.getLength(), length: 0 };
+    //       }
+    
+    //       quillInstance.insertEmbed(range.index, "image", imageUrl);
+    //       quillInstance.setSelection(range.index + 1);
+    //     }, 50);
+    
+    //     // Cleanup the input element
+    //     document.body.removeChild(input);
+    //   };
+    
+    //   // Append the input element to the DOM
+    //   document.body.appendChild(input);
+    // };
+    
+    
+  
+      const modules = {
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, 4, false] }, { font: [] }], // Headers & fonts
+            [{ size: ["small", false, "large", "huge"] }], // Proper size options
+            ["bold", "italic", "underline", "strike", "blockquote"], // Text styling
+            [
+              { list: "ordered" },
+              { list: "bullet" },
+              { indent: "-1" },
+              { indent: "+1" },
+            ], // Lists & indents
+            ["link"], // Links & images
+            ["clean"], // Remove formatting
+          ],
+          // handlers: {
+          //   image: imageHandler, 
+          // },
+        },
+      };
+      const formats = [
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "blockquote",
+        // "code-block",
+        "list",
+        "bullet",
+        "link",
+        "image",
+        "video",
+        "font",
+        "align",
+        "color",
+        "background",
+        "header",
+        "indent",
+        "size",
+        "script",
+        "clean",
+        // "code",
+        "direction",
+      ];
+      const uploadImageToServer = async (file) => {
+        try {
+          const formData = new FormData();
+          formData.append("image", file);
+    
+          const response = await axiosInstance.post("/api/blogs/upload-image", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+    
+          return response.data.imageUrl; // API must return { imageUrl: "https://your-s3-url.com/image.jpg" }
+        } catch (error) {
+          console.error("Image upload failed:", error);
+          return null;
+        }
+      };
+      const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+    
+        const imageUrl = await uploadImageToServer(file);
+        if (imageUrl) {
+          const newEditorValue = setFormData((form)=>({...form,description:formData.description +  `<img src="${imageUrl}" alt="uploaded-img" />` }))
+          
+          
+          
+         
+        }
+      };
+      const handleChange = (value) => {
+      
+        setFormData((prev) => ({ ...prev, description: value.toString("html") }));
+      };
   return (
     <div className="container-fluid">
       <div
@@ -392,11 +515,20 @@ const Evaluation = () => {
 
             <Form.Group controlId="formDescription">
               <Form.Label>Description</Form.Label>
-              <ReactQuill
+             
+               <div className="border border-1 p-2">
+               <ReactQuill
+              ref={quillRef}
                 value={formData.description}
                 onChange={handleDescriptionChange}
                 modules={modules}
+                formats={formats}
+
               />
+
+      {/* ✅ Custom Image Upload Button */}
+      <input type="file" accept="image/*" title="Choose image for description" placeholder="Choose image for description" onChange={handleFileUpload} style={{ marginTop: "10px" }} />
+    </div>
             </Form.Group>
 
             <Form.Group controlId="formQuote">
