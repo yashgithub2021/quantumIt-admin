@@ -28,22 +28,28 @@ const Plans = () => {
     const [verifyKey, setVerifyKey] = useState(0);
     const [updateToId, setUpdateToId] = useState('');
     const [firstFile, setFirstFile] = useState(null);
+    const [secondFile, setSecondtFile] = useState(null);
     const handleFirstFileChange = (event) => {
         setFirstFile(event.target.files[0]);
+    };
+    const handleSecondFileChange = (event) => {
+        setSecondtFile(event.target.files[0]);
     };
     const formDataObj = new FormData();
     const [formData, setFormData] = useState({
         name: '',
         stars: 0,
         message: '',
-        designation: ''
+        designation: '',
+        link: ''
     });
     const handleClose = () => {
         setFormData({
             name: '',
             stars: 0,
             message: '',
-            designation: ''
+            designation: '',
+            link: ''
         })
         setFirstFile(null)
         setShow(false);
@@ -64,6 +70,7 @@ const Plans = () => {
     const handleSubmit = async () => {
         setLoading(true);
         formDataObj.append('firstFile', firstFile);
+        formDataObj.append('secondFile', secondFile);
         for (const key in formData) {
             if (formData.hasOwnProperty(key)) {
                 if (Array.isArray(formData[key])) {
@@ -100,7 +107,8 @@ const Plans = () => {
             name: plan.name,
             stars: plan.stars,
             message: plan.message,
-            designation: plan.designation
+            designation: plan.designation,
+            link: plan.link
         });
         setIsEdit(true);
         setUpdateToId(plan._id);
@@ -163,6 +171,8 @@ const Plans = () => {
                                 <th>Profile Image</th>
                                 <th>Name</th>
                                 <th>Designation</th>
+                                <th>Link</th>
+                                <th>Logo</th>
                                 <th colSpan={2}>Actions</th>
                             </tr>
                         </thead>
@@ -174,6 +184,8 @@ const Plans = () => {
                                         <td> <img loading='lazy' src={plan.profileImg} alt='profile' width={100} height={100} /> </td>
                                         <td>{plan.name}</td>
                                         <td>{plan.designation}</td>
+                                        <td>{plan.link}</td>
+                                        <td> <img loading='lazy' src={plan.logo} alt='profile' width={100} height={100} /> </td>
                                         <td>
                                             <button onClick={() => handleEdit(plan)} className='btn btn-primary'>
                                                 <FaEye style={{ cursor: 'pointer', color: 'white', fontSize: '18px', margin: '0' }} />
@@ -214,10 +226,21 @@ const Plans = () => {
                             <Form.Control type="text" value={formData?.designation} onChange={(e) => setFormData({ ...formData, designation: e.target.value })} />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="form.ControlInput1">
+                            <Form.Label>Link</Form.Label>
+                            <Form.Control type="text" value={formData?.link} onChange={(e) => setFormData({ ...formData, link: e.target.value })} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="form.ControlInput1">
                             <Form.Label>File</Form.Label>
                             <Form.Control
                                 type="file"
                                 onChange={handleFirstFileChange}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="form.ControlInput1">
+                            <Form.Label>Logo</Form.Label>
+                            <Form.Control
+                                type="file"
+                                onChange={handleSecondFileChange}
                             />
                         </Form.Group>
                     </Form>
