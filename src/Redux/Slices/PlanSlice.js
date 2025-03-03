@@ -30,7 +30,7 @@ const PlanSlice = createSlice({
       state.error = false;
     },
     addPlanSuccess: (state) => {
-      toast.success("Plan Created Successfully", toastOptions);
+      toast.success("Feedback Created Successfully", toastOptions);
       state.error = false;
       state.isFetching = false;
     },
@@ -45,7 +45,7 @@ const PlanSlice = createSlice({
       state.error = false;
     },
     updatePlanSuccess: (state) => {
-      toast.success("Plan Updated Successfully", toastOptions);
+      toast.success("Feedback Updated Successfully", toastOptions);
       state.error = false;
       state.isFetching = false;
     },
@@ -60,7 +60,7 @@ const PlanSlice = createSlice({
       state.error = false;
     },
     removePlanSuccess: (state) => {
-      toast.success("Plan removed successfully", toastOptions);
+      toast.success("Feedback removed successfully", toastOptions);
       state.error = false;
       state.isFetching = false;
     },

@@ -37,6 +37,7 @@ const Plans = () => {
     };
     const formDataObj = new FormData();
     const [formData, setFormData] = useState({
+        category: '',
         name: '',
         stars: 0,
         message: '',
@@ -45,6 +46,7 @@ const Plans = () => {
     });
     const handleClose = () => {
         setFormData({
+            category: '',
             name: '',
             stars: 0,
             message: '',
@@ -104,6 +106,7 @@ const Plans = () => {
 
     const handleEdit = (plan) => {
         setFormData({
+            category: plan.category,
             name: plan.name,
             stars: plan.stars,
             message: plan.message,
@@ -163,12 +166,13 @@ const Plans = () => {
                         Add Feedback
                     </Button>
                 </Card.Header>
-                <Card.Body>
+                <Card.Body style={{ overflowX: 'scroll' }}>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Profile Image</th>
+                                <th>Category</th>
                                 <th>Name</th>
                                 <th>Designation</th>
                                 <th>Link</th>
@@ -182,6 +186,7 @@ const Plans = () => {
                                     <tr key={i}>
                                         <td>{i + 1}</td>
                                         <td> <img loading='lazy' src={plan.profileImg} alt='profile' width={100} height={100} /> </td>
+                                        <td>{plan.category}</td>
                                         <td>{plan.name}</td>
                                         <td>{plan.designation}</td>
                                         <td>{plan.link}</td>
@@ -209,6 +214,10 @@ const Plans = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form autoComplete='false'>
+                        <Form.Group className="mb-3" controlId="form.ControlInput1">
+                            <Form.Label>Category</Form.Label>
+                            <Form.Control type="text" value={formData?.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} />
+                        </Form.Group>
                         <Form.Group className="mb-3" controlId="form.ControlInput1">
                             <Form.Label>Name</Form.Label>
                             <Form.Control type="text" value={formData?.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
